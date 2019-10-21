@@ -1,0 +1,38 @@
+server:
+  port: 9999
+
+spring: 
+  thymeleaf: 
+    prefix: classpath:/templates/
+  #数据源配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/test?useAffectedRows=true&useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8
+    username: root
+    password: 123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      auto-commit: true
+      minimum-idle: 2
+      maximum-pool-size: 10
+      connection-timeout: 10000
+      max-lifetime: 600000
+      idle-timeout: 60000
+      validation-timeout: 1000
+      leak-detection-threshold: 30000
+    #热部署生效
+  devtools: 
+    restart: 
+      enabled: true
+      #设置重启的目录
+      additional-paths: src/main/
+  aop:
+    auto: true
+    proxy-target-class: true
+    
+mybatis:
+    #实体类所做包
+    type-aliases-package: com.ay.demo.entity
+    #mapper.xml所在位置
+    mapper-locations: classpath:com.ay.demo.mapper/*.xml
+    configuration:
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

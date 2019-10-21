@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="js/Echarts.js"></script>
+
+</head>
+<body>
+	<div id="main" style="width: 800px; height: 400px;"></div>
+</body>
+<script type="text/javascript">
+	var chart = echarts.init(document.getElementById('main'));
+	var option = {
+			xAxis: {
+				type: 'category',
+				data: ['2019-10', '2019-11', '2019-12']
+			},
+			yAxis: {
+				type: 'value'
+			},
+			series: [{
+				data: [26384, 28935, 27829],
+				type: 'line'
+			}]
+		};
+	chart.setOption(option);
+</script>
+</html>
