@@ -1,29 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html>  
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<script type="text/javascript" src="js/Echarts.js"></script>
-
+<title>Index</title>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 </head>
 <body>
-	<div id="main" style="width: 800px; height: 400px;"></div>
+    <input type="button" value="Get" onclick="get()">
+    <input type="button" value="logout" onclick="logout()">
 </body>
 <script type="text/javascript">
-	var chart = echarts.init(document.getElementById('main'));
-	var option = {
-			xAxis: {
-				type: 'category',
-				data: ['2019-10', '2019-11', '2019-12']
-			},
-			yAxis: {
-				type: 'value'
-			},
-			series: [{
-				data: [26384, 28935, 27829],
-				type: 'line'
-			}]
-		};
-	chart.setOption(option);
+
+function get(){
+    $.ajax({
+        url: "/tokenAuth/user/bpf",
+        dataType: "json",   
+        type:"GET",
+        beforeSend: function(request) {
+            //将cookie中的token信息放于请求头中
+            request.setRequestHeader("authStr", $.cookie('authStr'));
+        },
+        success:function(res){
+            console.log(res);
+        }
+    });
+}
+
+function logout(){
+    $.ajax({
+        url: "/tokenAuth/token",
+        dataType: "json",   
+        type:"DELETE",
+        beforeSend: function(request) {
+            //将cookie中的token信息放于请求头中
+            request.setRequestHeader("authStr", $.cookie('authStr'));
+        },
+        success:function(res){
+            console.log(res);
+        }
+    });
+}
 </script>
 </html>
