@@ -14,7 +14,7 @@ target/
 .sts4-cache
 .attach*
 HELP.md
-
+.factorypath
 ### IntelliJ IDEA ###
 .idea
 *.iws
