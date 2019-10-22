@@ -2,6 +2,7 @@ package com.bpf.tokenAuth.interceptor;
 
 import java.lang.reflect.Method;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,7 +27,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        System.out.println(11);
         // 如果不是映射到方法直接通过
         if (!(handler instanceof HandlerMethod)) {
             return true;
@@ -36,7 +36,13 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         Method method = handlerMethod.getMethod();
         if(method.getAnnotation(NoneAuth.class) != null) return true;       
         //token验证
-        String authStr = request.getHeader(NormalConstant.AUTHORIZATION);
+        String authStr = "";
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+        	if(NormalConstant.AUTHORIZATION.equals(cookie.getName())){
+        		authStr = cookie.getValue();
+        	}
+        }
         TokenModel model = tokenHelper.get(authStr);
         
         //验证通过

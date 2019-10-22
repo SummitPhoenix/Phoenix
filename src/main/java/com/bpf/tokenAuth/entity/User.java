@@ -10,7 +10,7 @@ public class User {
     private String password;
     private String phone;
     private String address;
-    
+    private String accountId;
     public User() {};
     
     public User(Integer id, String username, String password, Integer age, String phone, String address) {
@@ -60,6 +60,14 @@ public class User {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	
+	public String getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
 	}
 
 	@Override

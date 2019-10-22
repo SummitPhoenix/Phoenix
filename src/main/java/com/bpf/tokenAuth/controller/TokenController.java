@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ay.demo.mapper.UserTokenMapper;
+import com.ay.demo.util.EncryptUtils;
 import com.bpf.tokenAuth.annotation.NoneAuth;
 import com.bpf.tokenAuth.constant.MessageConstant;
 import com.bpf.tokenAuth.constant.NormalConstant;
 import com.bpf.tokenAuth.entity.JsonData;
 import com.bpf.tokenAuth.entity.User;
 import com.bpf.tokenAuth.enums.HttpStatusEnum;
-import com.bpf.tokenAuth.mapper.UserMapper;
 import com.bpf.tokenAuth.utils.token.TokenHelper;
 import com.bpf.tokenAuth.utils.token.TokenModel;
 
@@ -23,7 +24,7 @@ import com.bpf.tokenAuth.utils.token.TokenModel;
 public class TokenController {
     
     @Autowired
-    private UserMapper userMapper;
+    private UserTokenMapper userTokenMapper;
     
     @Autowired
     private TokenHelper tokenHelper;
@@ -31,7 +32,12 @@ public class TokenController {
     @NoneAuth
 	@GetMapping
 	public Object login(String phone, String password) {
-	    User user = userMapper.findByPhone(phone);
+    	try {
+			password = EncryptUtils.encode(password);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	    User user = userTokenMapper.findByPhone(phone);
 	    if(user == null || !user.getPassword().equals(password)) {
 	        return JsonData.buildError(HttpStatusEnum.NOT_FOUND.getCode(), MessageConstant.USERNAME_OR_PASSWORD_ERROR);
 	    }

@@ -13,7 +13,7 @@
 
 function get(){
     $.ajax({
-        url: "/tokenAuth/user/bpf",
+        url: "/token/user/13407547940",
         dataType: "json",   
         type:"GET",
         beforeSend: function(request) {
@@ -28,7 +28,7 @@ function get(){
 
 function logout(){
     $.ajax({
-        url: "/tokenAuth/token",
+        url: "/token",
         dataType: "json",   
         type:"DELETE",
         beforeSend: function(request) {

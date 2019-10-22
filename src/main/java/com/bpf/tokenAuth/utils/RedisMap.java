@@ -15,11 +15,14 @@ public class RedisMap {
 	public static String get(String id) {
 		long now = System.currentTimeMillis();
 		String token = tokens.get(id);
-		long timestamp = Long.parseLong(token.substring(32));
+		if(token == null) {
+			return TOKEN_EXPIRED;
+		}
+		long timestamp = Long.parseLong(token.substring(token.length()-13));
 		if((now-timestamp)/1000.0>TOKEN_EXPIRES_SECOND) {
 			return TOKEN_EXPIRED;
 		}
-		return token;
+		return token.substring(0,token.length()-13);
 	}
 	public static boolean delete(String id) {
 		return tokens.remove(id) != null;
