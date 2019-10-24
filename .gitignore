@@ -15,6 +15,7 @@ target/
 .attach*
 HELP.md
 .factorypath
+git.txt
 ### IntelliJ IDEA ###
 .idea
 *.iws
