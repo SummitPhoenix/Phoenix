@@ -1,10 +1,10 @@
-package com.ay.demo.controller;
+package com.ay.demo.util;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class test {
+public class MysqlTableTransferUtil {
 	private static String s = "CREATE TABLE `t_user` (\n" + 
 			"  `id` varchar(32) NOT NULL,\n" + 
 			"  `username` varchar(20) DEFAULT NULL,\n" + 
