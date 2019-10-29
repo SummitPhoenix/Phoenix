@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface UserMapper {
@@ -14,4 +15,10 @@ public interface UserMapper {
 	public Map<String,Object> getBalance(String phone);
 	
 	public int updateAccount(String phone, String balance, String updatetime);
+	
+	@Select("SELECT num FROM websitevisit WHERE website=#{website}")
+	public int getVisitNum(String website);
+	
+	@Update("UPDATE websitevisit SET num = #{num} WHERE website='index'")
+	public void updateVisitNum(int num);
 }

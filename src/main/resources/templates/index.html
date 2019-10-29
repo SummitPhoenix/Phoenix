@@ -8,7 +8,27 @@
 <body>
     <input type="button" value="Get" onclick="get()">
     <input type="button" value="logout" onclick="logout()">
+    <input type="button" value="getVisitNum" onclick="getVisitNum()">
+    <div>
+    	<span id="visitNum"></span><span>热度</span>
+    </div>
 </body>
+<script type="text/javascript">
+	/* $(document).ready(function(){
+		$.ajax({
+	        url: "/getVisitNum",
+	        dataType: "json",   
+	        type:"GET",
+	        beforeSend: function(request) {
+	            //将cookie中的token信息放于请求头中
+	            request.setRequestHeader("authStr", $.cookie('authStr'));
+	        },
+	        success:function(responseBean){
+	            $(visitNum).html(responseBean.data);
+	        }
+	    });
+	}); */
+</script>
 <script type="text/javascript">
 
 function get(){
@@ -24,6 +44,20 @@ function get(){
             console.log(res);
         }
     });
+    
+    $.ajax({
+    	url: "/getVisitNum?url=index",
+        dataType: "json",   
+        type:"GET",
+        beforeSend: function(request) {
+            //将cookie中的token信息放于请求头中
+            /* request.setRequestHeader("authStr", $.cookie('authStr')); */
+        },
+        success:function(responseBean){
+        	console.log(responseBean);
+            $(visitNum).html(responseBean.data);
+        }
+    });
 }
 
 function logout(){
@@ -37,6 +71,25 @@ function logout(){
         },
         success:function(res){
             console.log(res);
+        }
+    });
+}
+
+function getVisitNum(){
+    $.ajax({
+    	url: "/token/getVisitNum?url=index",
+        dataType: "json",   
+        type:"GET",
+        xhrFields: {
+        	withCredentials: true
+        },
+        beforeSend: function(request) {
+            //将cookie中的token信息放于请求头中
+            /* request.setRequestHeader("authStr", $.cookie('authStr')); */
+        },
+        success:function(responseBean){
+        	console.log(responseBean);
+            $(visitNum).html(responseBean.data);
         }
     });
 }

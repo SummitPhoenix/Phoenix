@@ -1,14 +1,18 @@
 package com.ay.demo.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ay.demo.entity.ResponseBean;
+import com.ay.demo.entity.WebSiteVisitData;
+import com.ay.demo.mapper.UserMapper;
 import com.ay.demo.service.UserService;
 import com.ay.demo.util.IPUtil;
 
@@ -22,7 +26,8 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
-	
+	@Autowired
+	private UserMapper userMapper;
 	@GetMapping("/getindex")
 	public String index() {
 		return "index";
@@ -43,5 +48,25 @@ public class UserController {
 		long time = System.currentTimeMillis() - startTime;
 		System.out.println(time/1000.0);
 		return responseBean;
+	}
+	
+	@ResponseBody
+	@GetMapping("/token/getVisitNum")
+	public ResponseBean getVisitNum(@RequestParam("url") String url,HttpServletResponse response,HttpServletRequest request) {
+		response.setHeader("Access-Control-Allow-Credentials", "true");
+		response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+		if(WebSiteVisitData.getInstance().visitNum.get() == 0) {
+			int visitNum = userMapper.getVisitNum(url);
+			if(visitNum == 0) {
+				WebSiteVisitData.getInstance().visitNum.getAndSet(1);
+				return ResponseBean.success(1);
+			}
+		}
+		WebSiteVisitData.getInstance().visitNum.incrementAndGet();
+		return ResponseBean.success(WebSiteVisitData.getInstance().visitNum);
+	}
+	@Scheduled(cron="0 */1 * * * ?")
+	public void updateVisitNum() {
+		userMapper.updateVisitNum(WebSiteVisitData.getInstance().visitNum.get());
 	}
 }

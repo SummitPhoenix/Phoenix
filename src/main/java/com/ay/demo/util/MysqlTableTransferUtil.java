@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 
+ * @author sparkle
+ *
+ */
 public class MysqlTableTransferUtil {
 	private static String s = "CREATE TABLE `t_user` (\n" + 
 			"  `id` varchar(32) NOT NULL,\n" + 

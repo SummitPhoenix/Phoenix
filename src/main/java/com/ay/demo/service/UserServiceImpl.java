@@ -11,6 +11,11 @@ import com.ay.demo.entity.ResponseBean;
 import com.ay.demo.mapper.UserMapper;
 import com.ay.demo.util.EncryptUtils;
 
+/**
+ * 
+ * @author sparkle
+ *
+ */
 @Service
 public class UserServiceImpl implements UserService {
 	
