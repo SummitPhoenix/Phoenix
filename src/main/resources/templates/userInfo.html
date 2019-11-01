@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>  
+<head>
+<title>Index</title>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+<style type="text/css">
+	#data{
+		top:100px;
+		width:200px;
+		height:100px;
+	}
+</style>
+</head>
+<body>
+    <input type="button" value="get" onclick="get()">
+    <input type="button" value="update" onclick="update()">
+    <div id="data">
+    	<span>用户名</span><input type="text" id="username"><br>
+    	<span>手机号</span><input type="text" id="phone"><br>
+    	<span>地址</span><input type="text" id="address"><br>
+    </div>
+</body>
+
+<script type="text/javascript">
+
+function get(){
+    $.ajax({
+    	async:true,
+    	url: "/getUserInfo",
+        dataType: "json",   
+        type:"GET",
+        success:function(responseBean){
+        	console.log(responseBean);
+        	var username = responseBean.data.username;
+        	var phone = responseBean.data.phone;
+        	var address = responseBean.data.address;
+            $("#username").val(username);
+            $("#phone").val(phone);
+            $("#address").val(address);
+        }
+    });
+}
+function update(){
+	var data = {"username":$("#username").val(),"phone":$("#phone").val(),"address":$("#address").val()};
+    $.ajax({
+    	async:true,
+    	url: "/updateUserInfo",
+    	data:JSON.stringify(data),
+        dataType: "json",
+        headers: {
+            "Accept": "application/json; charset=utf-8",
+            "Content-Type": "application/json; charset=UTF-8",
+        },
+        type:"post",
+        success:function(responseBean){
+        	console.log(responseBean);
+        }
+    });
+}
+</script>
+</html>

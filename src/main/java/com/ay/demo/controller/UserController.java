@@ -7,10 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ay.demo.entity.ResponseBean;
+import com.ay.demo.entity.User;
 import com.ay.demo.entity.WebSiteVisitData;
 import com.ay.demo.mapper.UserMapper;
 import com.ay.demo.service.UserService;
@@ -69,4 +73,24 @@ public class UserController {
 	public void updateVisitNum() {
 		userMapper.updateVisitNum(WebSiteVisitData.getInstance().visitNum.get());
 	}
+	
+	@RequestMapping("/userInfo")
+	public String userInfo() {
+		return "userInfo";
+	}
+	
+	@ResponseBody
+	@GetMapping("/getUserInfo")
+	public ResponseBean getUserInfo() {
+		User user = new User("phone","username","address");
+		return ResponseBean.success(user);
+	}
+	
+	@ResponseBody
+	@PostMapping("/updateUserInfo")
+	public ResponseBean updateUserInfo(@RequestBody User user, HttpServletRequest request) {
+		System.out.println(user);
+		return ResponseBean.success("");
+	}
+	
 }
