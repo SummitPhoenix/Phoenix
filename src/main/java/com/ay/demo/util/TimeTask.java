@@ -1,9 +1,15 @@
-package com.ay.demo.controller;
+package com.ay.demo.util;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
+/**
+ * @author sparkle
+ */
 public class TimeTask {
 
 	private static final long ONE_DAY = 24 * 60 * 60 * 1000;

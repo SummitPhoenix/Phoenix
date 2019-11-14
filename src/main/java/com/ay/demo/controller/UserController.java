@@ -18,7 +18,6 @@ import com.ay.demo.entity.User;
 import com.ay.demo.entity.WebSiteVisitData;
 import com.ay.demo.mapper.UserMapper;
 import com.ay.demo.service.UserService;
-import com.ay.demo.util.IPUtil;
 
 /**
  * 
@@ -46,7 +45,6 @@ public class UserController {
 	@ResponseBody
 	@GetMapping("/updateAccount")
 	public ResponseBean updateAccount(@RequestParam("phone") String phone, @RequestParam("money") String money, HttpServletRequest request) {
-		IPUtil.getIpAddress(request);
 		long startTime = System.currentTimeMillis();
 		ResponseBean responseBean = userService.updateAccount(phone, money);
 		long time = System.currentTimeMillis() - startTime;
