@@ -1,0 +1,37 @@
+body{
+    margin: 0px;
+    background-color:#F6F6F6;
+    font-family: -apple-system,BlinkMacSystemFont,Microsoft YaHei;
+    border-bottom: 0.5px solid #666666;
+}
+header{
+    position:absolute;
+    top:0px;
+    width:100%;
+    height:60px;
+    background-color: #FFFFFF;
+}
+#nav-title{
+    margin-left:150px;
+    margin-right: 50px;
+
+}
+#title{
+    font-size: 30px;
+    color:orangered;
+    font-family: consolas;
+}
+#layui-nav{
+    background-color: #FFFFFF;
+
+}
+.layui-nav .layui-nav-item a{
+    color:#444444 !important;
+}
+footer{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:100px;
+    /*background-color: black;*/
+}

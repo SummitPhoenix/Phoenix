@@ -1,3 +1,9 @@
+//初始化
+$(function(){
+    $("#header").load("header.html");
+    $("#footer").load("footer.html");
+});
+
 //导航栏
 layui.use('element', function(){
     //导航的hover效果、二级菜单等功能，需要依赖element模块

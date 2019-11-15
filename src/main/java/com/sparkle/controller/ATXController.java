@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @Date: 2019/11/14 下午7:16
  */
 @Controller
-@RequestMapping("/phoenix")
 public class ATXController {
 
     @GetMapping("/index")
@@ -21,5 +20,10 @@ public class ATXController {
     @GetMapping("/photo")
     public String photo() {
         return "photo";
+    }
+
+    @GetMapping("/navigate")
+    public String navigate() {
+        return "navigate";
     }
 }
