@@ -1,82 +1,41 @@
 <!DOCTYPE html>
-<html>  
-<head>
-<title>Index</title>
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-</head>
-<body>
-    <div>
-        <h3>公网访问</h3>
-        <img src="img/南京眼.jpg">
-    </div>
-</body>
-<script type="text/javascript">
+<html>
+    <head>
+        <title>首页</title>
+        <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+        <link rel="stylesheet" href="layui/css/layui.css">
+        <script src="layui/layui.js"></script>
+        <link href="css/index.css" rel="stylesheet" type="text/css">
+        <script src="js/index.js"></script>
+    </head>
+    <body>
+        <header>
+            <ul id="layui-nav" class="layui-nav" lay-filter="">
+                <li id="nav-title" class="layui-nav-item">
+                    <p id="title">Phoenix</p>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="">照片墙</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="">博客</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="">大数据</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="">社区</a>
+                </li>
+            </ul>
+        </header>
+        <article>
+            <div>
 
-</script>
-<script type="text/javascript">
+            </div>
+        </article>
+        <footer>
 
-function get(){
-    $.ajax({
-        url: "/token/user/13407547940",
-        dataType: "json",   
-        type:"GET",
-        beforeSend: function(request) {
-            //将cookie中的token信息放于请求头中
-            request.setRequestHeader("authStr", $.cookie('authStr'));
-        },
-        success:function(res){
-            console.log(res);
-        }
-    });
-    
-    $.ajax({
-    	url: "/getVisitNum?url=index",
-        dataType: "json",   
-        type:"GET",
-        beforeSend: function(request) {
-            //将cookie中的token信息放于请求头中
-            /* request.setRequestHeader("authStr", $.cookie('authStr')); */
-        },
-        success:function(responseBean){
-        	console.log(responseBean);
-            $(visitNum).html(responseBean.data);
-        }
-    });
-}
-
-function logout(){
-    $.ajax({
-        url: "/token",
-        dataType: "json",   
-        type:"DELETE",
-        beforeSend: function(request) {
-            //将cookie中的token信息放于请求头中
-            request.setRequestHeader("authStr", $.cookie('authStr'));
-        },
-        success:function(res){
-            console.log(res);
-        }
-    });
-}
-
-function getVisitNum(){
-    $.ajax({
-    	url: "/token/getVisitNum?url=index",
-        dataType: "json",   
-        type:"GET",
-        xhrFields: {
-        	withCredentials: true
-        },
-        beforeSend: function(request) {
-            //将cookie中的token信息放于请求头中
-            /* request.setRequestHeader("authStr", $.cookie('authStr')); */
-        },
-        success:function(responseBean){
-        	console.log(responseBean);
-            $(visitNum).html(responseBean.data);
-        }
-    });
-}
-</script>
+        </footer>
+    </body>
 </html>
