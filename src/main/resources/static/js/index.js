@@ -1,16 +1,8 @@
 //初始化
-$(function(){
+$(document).ready(function(){
     $("#header").load("header.html");
     $("#footer").load("footer.html");
-});
-
-//导航栏
-layui.use('element', function(){
-    //导航的hover效果、二级菜单等功能，需要依赖element模块
-    var element = layui.element;
-    //监听导航点击
-    element.on('nav(demo)', function(elem){
-        //console.log(elem)
-        layer.msg(elem.text());
-    });
+    document.getElementById("index").className = "layui-nav-item  layui-this";
+    console.log(document.getElementById("index").className);
+    /*$("#index").attr("class","layui-nav-item  layui-this");*/
 });
