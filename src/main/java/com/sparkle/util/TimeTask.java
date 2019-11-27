@@ -45,7 +45,7 @@ public class TimeTask {
 		};
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.HOUR_OF_DAY,19);
-		calendar.set(Calendar.MINUTE,55);
+		calendar.set(Calendar.MINUTE,54);
 		calendar.set(Calendar.SECOND,0);
 		//第一次执行定时任务的时间
 		Date date = calendar.getTime();

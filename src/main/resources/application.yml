@@ -1,7 +1,17 @@
 server:
   port: 14308
 
-spring: 
+spring:
+  mvc:
+    static-path-pattern: /**      #这个配置是默认配置
+  http:                           #这里是访问项目外文件夹的关键
+    multipart:
+      locations: /home/static
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/, classpath:/static/, file:${spring.http.multipart.locations}
+    #需要把自定义的路径添加到static-locations后面,原本的静态访问路径也要加上不然原本的静态资源会访问不到。
+    #访问时直接在访问路径上加上profile之后的路径，例如profile中有文件stuImg/test.jpg，则访问路径为localhost/stuImg/test.jpg
+
   thymeleaf: 
     prefix: classpath:/templates/
   #数据源配置
