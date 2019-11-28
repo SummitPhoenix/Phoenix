@@ -1,5 +1,8 @@
 server:
   port: 14308
+  address: 0.0.0.0
+
+photoLocation: /home/static
 
 spring:
   mvc:
@@ -8,9 +11,17 @@ spring:
     multipart:
       locations: /home/static
   resources:
+    # 资源缓存时间，单位秒
+    cache:
+      cachecontrol:
+        max-age: 604800
+    chain:
+      cache: true
+      compressed: true
     static-locations: classpath:/META-INF/resources/,classpath:/resources/, classpath:/static/, file:${spring.http.multipart.locations}
     #需要把自定义的路径添加到static-locations后面,原本的静态访问路径也要加上不然原本的静态资源会访问不到。
     #访问时直接在访问路径上加上profile之后的路径，例如profile中有文件stuImg/test.jpg，则访问路径为localhost/stuImg/test.jpg
+
 
   thymeleaf: 
     prefix: classpath:/templates/

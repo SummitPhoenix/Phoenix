@@ -33,16 +33,6 @@ public class UserController {
 		return userService.login(phone, password);
 	}
 	
-	@ResponseBody
-	@GetMapping("/updateAccount")
-	public ResponseBean updateAccount(@RequestParam("phone") String phone, @RequestParam("money") String money, HttpServletRequest request) {
-		long startTime = System.currentTimeMillis();
-		ResponseBean responseBean = userService.updateAccount(phone, money);
-		long time = System.currentTimeMillis() - startTime;
-		System.out.println(time/1000.0);
-		return responseBean;
-	}
-	
 	@RequestMapping("/userInfo")
 	public String userInfo() {
 		return "userInfo";

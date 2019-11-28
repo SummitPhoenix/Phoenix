@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>注册</title>
+        <!-- <script src="jquery.js"></script> -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="layui/layui.js"></script>
+        <link href="layui/css/layui.css" rel="stylesheet">
+		<link href="css/reg.css" rel="stylesheet">
+	</head>
+	<body>
+		<header>
+       		
+		</header>
+		<article>
+			<div id="container">
+				<span id="title">极客用户注册</span>
+				<a href="index" id="icon">
+					<i class="layui-icon layui-icon-username" style="font-size: 50px; color: #1E9FFF;"></i>
+				</a>
+				
+				<p id="code">代码改变世界</p>
+				<div id="inputbutton">
+					<form id="form" action="handleReg" onsubmit="return check()" method="post">
+						<input class="form-control" placeholder="用户名" type="text" data-val="true" id="username" name="username" onblur="checkUsername()">
+						<input class="form-control" placeholder="密码" type="password" id="password" name="password" onblur="checkPassword()">
+						<input class="form-control" placeholder="手机号" type="text" id="phone" name="phone" onblur="checkPhone()">
+						<input class="form-control" placeholder="邮箱" type="text" id="email" name="email" onblur="checkEmail()">
+						<button id="input" type="button" class="layui-btn layui-btn-normal" style="background-color: #007BFF;border-radius: 4px;">注册</button>
+					</form>
+				</div>
+			</div>
+		</article>
+		<footer>
+			
+		</footer>
+	</body>
+	<script language="javascript">
+		$('#input').click(function(){
+			alert('ajax');
+	        $.ajax({
+	        	async:false,
+	            url:"handleReg",
+	            type:"POST",
+	            data:JSON.stringify($('#form').serializeObject()),
+	            contentType:"application/json",  //缺失会出现URL编码，无法转成json对象
+	            success:function(){
+	                alert("成功");
+	            },
+	        	error:function () {
+                	console.log('请求失败！')
+            	}
+	        });
+	    });
+	
+		var f1 = false;
+		var f2 = false;
+		var f3 = false;
+		var f4 = false;
+		
+		function checkUsername(){
+			var obj=document.getElementById("username");
+			var id=trim(obj.value);
+			var Regex= /^[a-zA-Z0-9_-\u4E00-\u9FA5]{4,10}$/;
+			if(Regex.test(id)){
+				f1 = true;
+				console.log("username");
+			}
+		}
+		function checkPassword(){
+			var obj=document.getElementById("password");
+			var id=trim(obj.value);
+			var Regex= /^\w{6,16}$/;
+			if(Regex.test(id)){
+				f2 = true;
+				console.log("password");
+			}
+		}
+		function checkPhone(){
+			var obj=document.getElementById("phone");
+			var id=trim(obj.value);
+			var Regex= /^1\d{10}$/;
+			if(Regex.test(id)){
+				f3 = true;
+				console.log("phone");
+			}
+		}
+		function checkEmail(){
+			var obj=document.getElementById("email");
+			var id=trim(obj.value);
+			var Regex= /^\w+@\w+.\w+$/;
+			if(Regex.test(id)){
+				f4 = true;
+				console.log("email");
+			}
+		}
+		function trim(s){
+			return s.replace(/^\s+|\s+$/g,"");
+		}
+		function check(){
+			if(f1&&f2&&f3&&f4==true){
+				return true;
+			}
+			else{
+				alert("输入错误");
+				return false;
+			}
+		}
+		//定义serializeObject方法，序列化表单
+		$.fn.serializeObject = function() {
+			var o = {};
+			var a = this.serializeArray();
+			$.each(a, function() {
+				if (o[this.name]) {
+					if (!o[this.name].push) {
+						o[this.name] = [ o[this.name] ];
+					}
+					o[this.name].push(this.value || '');
+				} else {
+					o[this.name] = this.value || '';
+				}
+			});
+			return o;
+		};
+	</script>
+</html>

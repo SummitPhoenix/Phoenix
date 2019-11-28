@@ -16,9 +16,9 @@ public class ATXController {
         return "index";
     }
 
-    @GetMapping("/photo")
-    public String photo() {
-        return "photo";
+    @GetMapping("/photoWall")
+    public String photoWall() {
+        return "photoWall";
     }
 
     @GetMapping("/navigate")
