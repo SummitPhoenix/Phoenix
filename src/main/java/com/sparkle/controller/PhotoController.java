@@ -22,7 +22,7 @@ public class PhotoController {
     @Value("${photoLocation}")
     private String photoLocation;
 
-    @RequestMapping("/photoWall")
+    @GetMapping("/photoWall")
     public String photoWall() {
         return "photoWall";
     }

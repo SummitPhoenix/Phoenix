@@ -1,0 +1,41 @@
+/**{
+    margin: 0px;
+    padding: 0px;
+}*/
+/*将主容器的布局方式设置为相对布局*/
+#container{
+    top:100px;
+	width:1400px;
+	height:auto;
+    overflow: visible;
+	border:1px solid red;
+    position: relative;
+}
+
+.box{
+    padding: 5px;
+    float: left;
+}
+/*将承载图片的容器定制颜色及边框大小和圆角*/
+.boximg{
+    padding: 5px;
+    box-shadow: 0 0 5px #ccc;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+}
+/*定制图片尺寸*/
+.boximg img{
+    width: 400px;
+    height: auto;
+}
+
+#showmore{
+    position: relative;
+    top:100px;
+}
+#showmore a{
+    color:black;
+    width:16px;
+    height:9px;
+    font-size: 18px;
+}

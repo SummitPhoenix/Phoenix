@@ -2,7 +2,7 @@ server:
   port: 14308
   address: 0.0.0.0
 
-photoLocation: /home/static
+photoLocation: /home/static/picture
 
 spring:
   mvc:

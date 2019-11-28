@@ -1,0 +1,69 @@
+body {
+	font-family: Microsoft YaHei;
+}
+
+article {
+	position: absolute;
+	top: 200px;
+	left: 23%;
+}
+.append{
+	padding:5px;
+}
+#content{
+	width:800px;
+	height:400px;
+}
+#addBlog{
+	position:relative;
+	width: 1000px;
+	border: 1px solid #BCE8F1;
+	padding:20px;
+}
+#edit{
+	position: relative;
+	top:100px;
+}
+#title{
+	font-size: 24px;
+	font-weight: 700;
+	color:#333;
+}
+.tag{
+	float: left;
+	margin-right: 20px;
+	color: #3366FF;
+}
+#time{
+	font-size: 14px;
+	color:#858585;
+}
+#author{
+	color: #78a5f1;
+}
+.subTitle{
+	font-size: 24px;
+	font-weight: 700px;
+	color: #4f4f4f;
+}
+.paraGraph{
+	font-size: 16px;
+	color:#4d4d4d;
+}
+.weightParaGraph{
+	font-size: 16px;
+    color: #4d4d4d;
+    font-weight: 700;
+}
+.picture{
+	width:800px;
+	position: relative;
+	left: 100px;
+}
+#upload{
+	position: relative;
+	top: 150px;
+}
+#submit{
+	padding:5px;
+}

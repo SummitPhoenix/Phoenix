@@ -1,0 +1,11 @@
+#navigate{
+    top:50px;
+}
+
+ul,li{
+    list-style: none;
+}
+
+li{
+    float: left;
+}

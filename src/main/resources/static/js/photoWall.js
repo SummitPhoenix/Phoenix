@@ -2,21 +2,25 @@
 $(document).ready(function(){
     $("#header").load("header.html");
     $("#footer").load("footer.html");
-    document.getElementById("index").className = "layui-nav-item  layui-this";
-    console.log(document.getElementById("index").className);
-    /*$("#index").attr("class","layui-nav-item  layui-this");*/
 });
-
+var containerHeight = 20;
 $(document).ready(function(){
     $.ajax({
         async:false,
-        url:"getPhotoList",
-        type:'post',
+        url:"/photo/getPhotoList",
+        type:'GET',
         dataType:'json',//设置返回的数据类型
         cache:false,
         success:function (data) {
             $.each(data,function(i,json){
                 $("#container").append("<div class='box'><div class='boximg'><a href='picture/"+data[i]+"' target='_blank'><img src='picture/"+data[i]+"'></a></div></div>");
+            });
+            //'loadingBox' => 存放 指定要加载的图片 的上级盒子 ID
+            getImgLoadEd('container',function(){
+                waterFlow("container", "box");
+                console.log('所有加载完成');
+                console.log(containerHeight);
+                $("#container").css("height", ""+containerHeight);
             });
             return;
         },
@@ -27,9 +31,48 @@ $(document).ready(function(){
 
 });
 
-setTimeout(function () {
+
+//判断 指定要加载的图片 是否加载完成
+function getImgLoadEd(loadingBox,callback){
+    //存放 指定要加载的图片 的盒子
+    var imgAll   = document.getElementById(loadingBox);
+    //指定要加载的图片 的数量
+    var imgL     = imgAll.children.length;
+    //指定要加载的图片 起始 key
+    var imgStart = 0;
+
+    IfLoadImg();
+
+    //定时器执行的 加载图片 方法
+    function IfLoadImg(){
+        //所有图片加载完毕
+        if(imgStart >= imgL){
+            console.log('图片加载完成，图片总数量：' + imgStart);
+            if(callback){
+                callback();
+            }
+            return;
+        }
+
+        console.log('当前加载图片KEY：' + imgStart);
+
+        //根据 指定要加载的图片 的KEY 加载图片的方法
+        loadImg(imgStart);
+        function loadImg(imgKey){
+            var curImg  = imgAll.children[imgKey].children[0].children[0].children[0].src;
+            var loadImg = new Image();
+            loadImg.src = curImg;
+            loadImg.onload = function(){
+                imgStart++;
+                IfLoadImg();
+            }
+        }
+    }
+}
+
+/*setTimeout(function () {
     waterFlow("container", "box");
-}, 5000);
+}, 1000);*/
 function waterFlow(parent, chirld){
     var wparent = document.getElementById(parent);//获取父级div, 最外级容器
     var allArr = getAllChirld(wparent,chirld);//获取到所有的class为box的容器div
@@ -79,7 +122,8 @@ function getMinHeightOfCols(chirdArr, num){
             onlyOneColsArr[minHeightOfindex] += chirdArr[i].offsetHeight;
         }
     }
-
+    containerHeight+=onlyOneColsArr[onlyOneColsArr.length-1];
+    console.log(containerHeight);
 }
 //此方法是为了进行最小高度下标的确定
 function getminIndex(onlyOneColsArr, min){
@@ -91,3 +135,7 @@ function getminIndex(onlyOneColsArr, min){
         }
     }
 }
+
+$("#more").click(function () {
+    
+})

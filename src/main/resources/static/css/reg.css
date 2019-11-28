@@ -1,0 +1,71 @@
+#container {
+	width: 400px;
+	height: 485px;
+	background-color: white;
+	left: 40%;
+	top: 200px;
+	position: relative;
+}
+
+#title {
+	font-family: Helvetica;
+	font-size: 24px;
+	color: #393b3d;
+	position: relative;
+	top: 20px;
+	left: 25px;
+}
+
+#code {
+	width: 100%;
+	bottom: 0;
+	font-size: 15px;
+	color: #7f8085;
+	position: relative;
+	top: 130px;
+	right: 0px;
+}
+
+#inputbutton {
+	position: relative;
+	top: 150px;
+	width: 300px;
+	height: 200px;
+	left: 50px;
+}
+
+#icon {
+	position: relative;
+	top: 120px;
+	right: 75px;
+}
+
+.form-control {
+	width: 298px;
+	height: 30px;
+	position: relative;
+	top: 10px;
+	margin-bottom: 10px;
+}
+
+#loginbutton {
+	background-color: #007BFF;
+}
+
+button {
+	position: relative;
+	top: 20px;
+	width: 80px;
+	display: block;
+}
+
+.forget {
+	color: #4688f1;
+	float: right;
+	display: block;
+	margin-top: 15px;
+}
+
+#describe, #reg {
+	float: left;
+}
