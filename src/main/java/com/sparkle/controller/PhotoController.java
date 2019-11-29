@@ -1,14 +1,19 @@
 package com.sparkle.controller;
 
+import com.sparkle.entity.ResponseBean;
+import com.sparkle.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Description
@@ -27,9 +32,9 @@ public class PhotoController {
         return "photoWall";
     }
 
-    @GetMapping("/getPhotoList")
+    @GetMapping("/getSpaceList")
     @ResponseBody
-    public List<String> getPhotoList() {
+    public List<String> getSpaceList(){
         File file = new File(photoLocation);
         File[] files = file.listFiles();
         List<String> list = new ArrayList<>();
@@ -37,5 +42,48 @@ public class PhotoController {
             list.add(f.getName());
         }
         return list;
+    }
+
+    @GetMapping("/createSpace")
+    @ResponseBody
+    public ResponseBean createSpace(@RequestParam("spaceName") String spaceName){
+        File file = new File(photoLocation);
+        File[] files = file.listFiles();
+        Set<String> set = new HashSet<>();
+        for(File f:files) {
+            set.add(f.getName());
+        }
+        if(set.contains(spaceName)){
+            return ResponseBean.fail("空间名已被使用");
+        }
+        File dir = new File(photoLocation+"/"+spaceName);
+        dir.mkdirs();
+        return ResponseBean.success("创建空间成功");
+    }
+
+    @GetMapping("/getPhotoList")
+    @ResponseBody
+    public List<String> getPhotoList(@RequestParam("space") String space) {
+        File file = new File(photoLocation+"/"+space);
+        File[] files = file.listFiles();
+        List<String> list = new ArrayList<>();
+        for(File f:files) {
+            list.add(f.getName());
+        }
+        return list;
+    }
+
+    /**
+     * 上传图片文件夹
+     */
+    @PostMapping("/uploadFolder")
+    @ResponseBody
+    public ResponseBean uploadFileFolder(HttpServletRequest request) {
+        System.out.println("uploadFile");
+        MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
+        //fileFolder为文件项的name值
+        List<MultipartFile> files = params.getFiles("fileFolder");
+        String spaceLocation = photoLocation + request.getParameter("space ");
+        return FileUploadUtil.upload(files, spaceLocation);
     }
 }

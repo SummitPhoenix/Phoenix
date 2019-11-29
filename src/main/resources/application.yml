@@ -22,6 +22,12 @@ spring:
     #需要把自定义的路径添加到static-locations后面,原本的静态访问路径也要加上不然原本的静态资源会访问不到。
     #访问时直接在访问路径上加上profile之后的路径，例如profile中有文件stuImg/test.jpg，则访问路径为localhost/stuImg/test.jpg
 
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+      file-size-threshold: 0
 
   thymeleaf: 
     prefix: classpath:/templates/

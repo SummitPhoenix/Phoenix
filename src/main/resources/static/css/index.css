@@ -6,6 +6,11 @@ ul,li{
     list-style: none;
 }
 
-li{
+.website{
+    padding:30px;
     float: left;
+}
+
+h3{
+    display: inline-block;
 }
