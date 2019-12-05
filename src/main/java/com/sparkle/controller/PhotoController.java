@@ -63,14 +63,14 @@ public class PhotoController {
 
     @GetMapping("/getPhotoList")
     @ResponseBody
-    public List<String> getPhotoList(@RequestParam("space") String space) {
+    public List<String> getPhotoList(@RequestParam("space") String space, @RequestParam("page") int page) {
         File file = new File(photoLocation+"/"+space);
         File[] files = file.listFiles();
         List<String> list = new ArrayList<>();
         for(File f:files) {
             list.add(f.getName());
         }
-        return list;
+        return list.subList(page,page+10);
     }
 
     /**

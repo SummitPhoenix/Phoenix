@@ -3,11 +3,15 @@ $(document).ready(function(){
     $("#header").load("header.html");
     $("#footer").load("footer.html");
 });
+
+var space;
+var page;
+
 var containerHeight = 20;
 $(document).ready(function(){
     $.ajax({
         async:false,
-        url:"/photo/getPhotoList",
+        url:"/photo/getPhotoList?space="+space+"&page="+page,
         type:'GET',
         dataType:'json',//设置返回的数据类型
         cache:false,

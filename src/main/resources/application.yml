@@ -63,3 +63,4 @@ mybatis:
     mapper-locations: classpath:com.sparkle.mapper/*.xml
     configuration:
       log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+      call-setters-on-nulls: true
