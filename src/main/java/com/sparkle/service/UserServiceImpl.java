@@ -1,14 +1,12 @@
 package com.sparkle.service;
 
-import java.math.BigDecimal;
-import java.util.Map;
-
 import com.sparkle.entity.ResponseBean;
 import com.sparkle.mapper.UserMapper;
 import com.sparkle.util.EncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 /**
  * 
@@ -31,11 +29,11 @@ public class UserServiceImpl implements UserService {
 		}
 		Map<String,Object> resultMap = userMapper.getUserInfo(phone);
 		String datapassword = (String) resultMap.get("password");
-		if(password.equals(datapassword)) {
-			resultMap.remove("password");
-			return ResponseBean.success(resultMap);
+		if(!password.equals(datapassword)) {
+			return ResponseBean.fail(null,"密码错误登录失败");
 		}
-		return ResponseBean.fail(null,"密码错误登录失败");
+		resultMap.remove("password");
+		return ResponseBean.success(resultMap);
 	}
 
 }
