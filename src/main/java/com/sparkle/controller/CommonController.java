@@ -1,7 +1,7 @@
 package com.sparkle.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * @Description
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
  * @Date: 2019/11/14 下午7:16
  */
 @Controller
-public class ATXController {
+public class CommonController {
 
     @GetMapping("/index")
     public String index() {

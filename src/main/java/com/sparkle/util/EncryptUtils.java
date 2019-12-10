@@ -1,15 +1,14 @@
 package com.sparkle.util;
 
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESKeySpec;
 
 /**
  * 3DES加密工具类
@@ -35,7 +34,8 @@ public class EncryptUtils {
 		DESKeySpec dks = new DESKeySpec(secretKey.getBytes());
 		// 创建一个密匙工厂，然后用它把DESKeySpec转换成
 		// 一个SecretKey对象
-		SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");// DES加密和解密过程中，密钥长度都必须是8的倍数
+		// DES加密和解密过程中，密钥长度都必须是8的倍数
+		SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
 		SecretKey secretKey = keyFactory.generateSecret(dks);
 		// using DES in ECB mode
 		Cipher cipher = Cipher.getInstance("DES/ECB/pkcs5padding");
