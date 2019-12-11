@@ -24,9 +24,9 @@ import java.util.Map;
 @RequestMapping("/user")
 public class UserController {
 	
-	@Autowired
-	private UserService userService;
 	@Resource
+	private UserService userService;
+	@Autowired(required = false)
 	private UserMapper userMapper;
 
 	@ResponseBody

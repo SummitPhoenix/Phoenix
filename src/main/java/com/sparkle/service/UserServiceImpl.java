@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @Service
 public class UserServiceImpl implements UserService {
-	
+
 	@Autowired(required = false)
 	private UserMapper userMapper;
 	

@@ -41,12 +41,12 @@ $("#addWeightParaGraph").click(function () {
 })
 $("#addJPG").click(function () {
     var content = $("#content").val();
-    $("#addBlog").append("<img class='picture' src='/img/"+content+".jpg'><br/>");
+    $("#addBlog").append("<img class='picture' src="+content+static/img/.jpg'><br/>");
     $("#content").val("");
 })
 $("#addPNG").click(function () {
     var content = $("#content").val();
-    $("#addBlog").append("<img class='picture' src='/img/"+content+".png'><br/>");
+    $("#addBlog").append("<img class='picture' src="+content+static/img/.png'><br/>");
     $("#content").val("");
 })
 $("#submit").click(function () {

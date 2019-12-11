@@ -4,8 +4,8 @@ $(document).ready(function(){
     $("#footer").load("footer.html");
 });
 
-var space;
-var page;
+var space = 'BellaLucas';
+var page = 1;
 
 var containerHeight = 20;
 $(document).ready(function(){
@@ -17,7 +17,7 @@ $(document).ready(function(){
         cache:false,
         success:function (data) {
             $.each(data,function(i,json){
-                $("#container").append("<div class='box'><div class='boximg'><a href='picture/"+data[i]+"' target='_blank'><img src='picture/"+data[i]+"'></a></div></div>");
+                $("#container").append("<div class='box'><div class='boximg'><a href='picture/"+space+"/"+data[i]+"' target='_blank'><img src='picture/"+space+"/"+data[i]+"'></a></div></div>");
             });
             //'loadingBox' => 存放 指定要加载的图片 的上级盒子 ID
             getImgLoadEd('container',function(){
