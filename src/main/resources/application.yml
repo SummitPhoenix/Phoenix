@@ -8,15 +8,18 @@ server:
     max-threads: 1000
     max-connections: 20000
     min-spare-threads: 100
+  compression:
+    enabled: true
+    mime-types: text/html, text/xml, text/plain, text/css, text/javascript, application/javascript, application/json
+    excluded-user-agents: image/jpeg, image/png, video/mp4
+
 
 photoLocation: /home/static/picture
 
 spring:
   mvc:
     static-path-pattern: /**      #这个配置是默认配置
-  http:                           #这里是访问项目外文件夹的关键
-    multipart:
-      locations: /home/static
+
   resources:
     # 资源缓存时间，单位秒
     cache:
@@ -35,6 +38,8 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
       file-size-threshold: 0
+      #这里是访问项目外文件夹的关键
+      location: /home/static
 
   thymeleaf: 
     prefix: classpath:/templates/
