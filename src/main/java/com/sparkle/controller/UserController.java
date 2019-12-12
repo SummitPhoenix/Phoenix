@@ -5,7 +5,6 @@ import com.sparkle.entity.User;
 import com.sparkle.mapper.UserMapper;
 import com.sparkle.service.UserService;
 import com.sparkle.util.JWTUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +25,8 @@ public class UserController {
 	
 	@Resource
 	private UserService userService;
-	@Autowired(required = false)
+
+	@Resource
 	private UserMapper userMapper;
 
 	@ResponseBody

@@ -30,9 +30,9 @@ public class JWTUtil {
      * @return
      */
     public static String sign(Map<String, Object> userInfo) {
-        String id = (String)userInfo.get("id");
-        String username = (String)userInfo.get("username");
         String phone = (String)userInfo.get("phone");
+        String username = (String)userInfo.get("username");
+        String role = (String)userInfo.get("role");
         String address = (String)userInfo.get("address");
 
         try {
@@ -47,9 +47,9 @@ public class JWTUtil {
             // 返回token字符串
             return JWT.create()
                     .withHeader(header)
-                    .withClaim("id", id)
-                    .withClaim("username", username)
                     .withClaim("phone", phone)
+                    .withClaim("username", username)
+                    .withClaim("role", role)
                     .withClaim("address", address)
                     .withExpiresAt(date)
                     .sign(algorithm);

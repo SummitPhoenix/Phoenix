@@ -3,9 +3,9 @@ package com.sparkle.service;
 import com.sparkle.entity.ResponseBean;
 import com.sparkle.mapper.UserMapper;
 import com.sparkle.util.EncryptUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -16,7 +16,7 @@ import java.util.Map;
 @Service
 public class UserServiceImpl implements UserService {
 
-	@Autowired(required = false)
+	@Resource
 	private UserMapper userMapper;
 	
 	@Override
