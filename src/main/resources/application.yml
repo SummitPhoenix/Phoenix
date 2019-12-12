@@ -1,6 +1,13 @@
 server:
   port: 14308
   address: 0.0.0.0
+  #servlet:
+    #context-path: /phoenix
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 1000
+    max-connections: 20000
+    min-spare-threads: 100
 
 photoLocation: /home/static/picture
 
@@ -64,3 +71,15 @@ mybatis:
     configuration:
       log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
       call-setters-on-nulls: true
+
+#无需拦截的相关请求资源
+interceptor-config:
+  login-interceptor-exclude-path:
+    - /login
+    - /logout
+    - /static/**
+    - /*.css
+    - /*.js
+    - /index/**
+    - /photoWall
+    - /photo/**

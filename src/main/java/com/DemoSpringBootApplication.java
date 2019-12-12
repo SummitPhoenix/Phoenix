@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.*"}) 
-@MapperScan(basePackages = {"com.ay.demo.mapper"})
+@MapperScan(basePackages = {"com.sparkle.mapper"})
 @EnableScheduling
 @Configuration
 public class DemoSpringBootApplication {
