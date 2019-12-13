@@ -1,7 +1,8 @@
-package com.sparkle.service;
+package com.sparkle.service.Impl;
 
 import com.sparkle.entity.ResponseBean;
-import com.sparkle.mapper.UserMapper;
+import com.sparkle.mapper.mapper.UserMapper;
+import com.sparkle.service.UserService;
 import com.sparkle.util.EncryptUtils;
 import org.springframework.stereotype.Service;
 

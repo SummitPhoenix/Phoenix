@@ -16,17 +16,7 @@ import java.util.concurrent.TimeoutException;
 @Component
 @EnableRabbit
 public class Receiver {
-//    @RabbitListener(queues = {"queue1"})
-//    public String processMessage(String msg) {
-//
-//        System.out.println(Thread.currentThread().getName() + " 接收到来自队列的消息：" + msg);
-//        return msg;
-//    }
 
-//    @RabbitListener(queues = "queue2")
-//    public void processMessage2(String msg) {
-//        System.out.println(Thread.currentThread().getName() + " 接收到来自queue2队列的消息：" + msg);
-//    }
     @Bean
     public static void receive() throws IOException, TimeoutException {
         //建立MQ连接

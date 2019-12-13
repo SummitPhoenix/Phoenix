@@ -1,4 +1,4 @@
-package com.websocket;
+package com.sparkle.common.websocket;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.websocket;
+package com.sparkle.common.websocket;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

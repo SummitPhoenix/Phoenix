@@ -1,4 +1,4 @@
-package com.websocket;
+package com.sparkle.common.websocket;
 
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;

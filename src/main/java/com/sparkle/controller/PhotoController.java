@@ -79,7 +79,6 @@ public class PhotoController {
     @PostMapping("/uploadFolder")
     @ResponseBody
     public ResponseBean uploadFileFolder(HttpServletRequest request) {
-        System.out.println("uploadFile");
         MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
         //fileFolder为文件项的name值
         List<MultipartFile> files = params.getFiles("fileFolder");

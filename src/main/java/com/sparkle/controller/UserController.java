@@ -2,7 +2,7 @@ package com.sparkle.controller;
 
 import com.sparkle.entity.ResponseBean;
 import com.sparkle.entity.User;
-import com.sparkle.mapper.UserMapper;
+import com.sparkle.mapper.mapper.UserMapper;
 import com.sparkle.service.UserService;
 import com.sparkle.util.JWTUtil;
 import org.springframework.stereotype.Controller;

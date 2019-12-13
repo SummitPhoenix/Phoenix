@@ -1,4 +1,4 @@
-package com.sparkle.mapper;
+package com.sparkle.mapper.mapper;
 
 import com.sparkle.entity.Blog;
 import org.apache.ibatis.annotations.Mapper;
