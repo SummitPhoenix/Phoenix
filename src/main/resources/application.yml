@@ -17,6 +17,18 @@ server:
 photoLocation: /home/static/picture
 
 spring:
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: /
+    publisher-confirms: true
+    publisher-returns: true
+    template:
+      mandatory: true
+
+
   mvc:
     static-path-pattern: /**      #这个配置是默认配置
 
@@ -88,3 +100,4 @@ interceptor-config:
     - /index/**
     - /photoWall
     - /photo/**
+    - /rabbitmq/**

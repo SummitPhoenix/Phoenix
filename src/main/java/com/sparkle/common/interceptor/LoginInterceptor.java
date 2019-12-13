@@ -1,4 +1,4 @@
-package com.sparkle.interceptor;
+package com.sparkle.common.interceptor;
 
 import com.sparkle.util.JWTUtil;
 import org.springframework.stereotype.Component;
