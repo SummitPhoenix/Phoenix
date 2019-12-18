@@ -16,18 +16,17 @@
 <script type="text/javascript">
 function login(){
     $.ajax({
-        url: "/token",
+        url: "/user/login/token",
         dataType: "json",
         data: {'phone':$("#phone").val(), 'password':$("#password").val()},
         type:"GET",
-        success:function(res){
-            console.log(res);
-            if(res.code == 200){
-                var authStr = res.data.userId + "_" + res.data.token;
-                //把生成的token放在cookie中
-                $.cookie("authStr", authStr);
-                window.location.href = "http://localhost:8080/token/index";
-            }else alert(res.msg);
+        success:function(data){
+            console.log(data);
+            if(data.code == 'SUCCESS'){
+                window.location.href = "/index";
+            }else {
+                alert(data.msg);
+            }
         }
     });
 }

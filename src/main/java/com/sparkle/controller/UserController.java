@@ -30,7 +30,7 @@ public class UserController {
 	private UserMapper userMapper;
 
 	@ResponseBody
-	@GetMapping("/login")
+	@GetMapping("/login/token")
 	public ResponseBean login(@RequestParam("phone") String phone, @RequestParam("password") String password, HttpServletResponse response) {
 		Map<String, Object> userInfo = userMapper.getUserInfo(phone);
 		String token = JWTUtil.sign(userInfo);
@@ -40,7 +40,7 @@ public class UserController {
 		cookie.setDomain("localhost");
 		cookie.setPath("/");
 		response.addCookie(cookie);
-		return userService.login(phone, password);
+		return userService.login(phone, password, userInfo);
 	}
 	
 	@RequestMapping("/userInfo")

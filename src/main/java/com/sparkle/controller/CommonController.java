@@ -22,6 +22,11 @@ public class CommonController {
         return "index";
     }
 
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
     @GetMapping("/photoWall")
     public String photoWall() {
         return "photoWall";

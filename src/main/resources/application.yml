@@ -5,8 +5,8 @@ server:
     #context-path: /phoenix
   tomcat:
     uri-encoding: UTF-8
-    max-threads: 1000
-    max-connections: 20000
+    max-threads: 100
+    max-connections: 100
     min-spare-threads: 100
   compression:
     enabled: true
@@ -40,7 +40,7 @@ spring:
     chain:
       cache: true
       compressed: true
-    static-locations: classpath:/META-INF/resources/,classpath:/resources/, classpath:/static/, file:${spring.http.multipart.locations}
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/, classpath:/static/, file:${spring.servlet.multipart.location}
     #需要把自定义的路径添加到static-locations后面,原本的静态访问路径也要加上不然原本的静态资源会访问不到。
     #访问时直接在访问路径上加上profile之后的路径，例如profile中有文件stuImg/test.jpg，则访问路径为localhost/stuImg/test.jpg
 
@@ -57,7 +57,7 @@ spring:
     prefix: classpath:/templates/
   #数据源配置
   datasource:
-    url: jdbc:mysql://localhost:3306/test?useAffectedRows=true&useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8
+    url: jdbc:mysql://localhost:3306/sparkle?useAffectedRows=true&useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -92,8 +92,9 @@ mybatis:
 #无需拦截的相关请求资源
 interceptor-config:
   login-interceptor-exclude-path:
+    - /user/login/**
+    - /user/logout
     - /login
-    - /logout
     - /static/**
     - /*.css
     - /*.js
@@ -101,3 +102,9 @@ interceptor-config:
     - /photoWall
     - /photo/**
     - /rabbitmq/**
+    - /header.html
+    - /footer.html
+    - /picture/**
+    - /*.jpg
+    - /*.png
+    - /favicon.ico

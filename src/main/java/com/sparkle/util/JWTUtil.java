@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -24,10 +23,6 @@ public class JWTUtil {
 
     /**
      * 生成签名，15分钟过期
-     *
-     * @param **username**
-     * @param **password**
-     * @return
      */
     public static String sign(Map<String, Object> userInfo) {
         String phone = (String)userInfo.get("phone");
@@ -62,18 +57,18 @@ public class JWTUtil {
     /**
      * 检验token是否正确
      *
-     * @param **token**
+     * @param token
      * @return
      */
-    public static Long verify(String token) {
+    public static boolean verify(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
             JWTVerifier verifier = JWT.require(algorithm).build();
-            DecodedJWT jwt = verifier.verify(token);
-            Long userId = jwt.getClaim("userId").asLong();
-            return userId;
+            verifier.verify(token);
+            return true;
         } catch (Exception e) {
-            return 0L;
+            e.printStackTrace();
+            return false;
         }
     }
 

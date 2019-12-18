@@ -9,7 +9,7 @@ import java.util.Map;
 @Mapper
 public interface UserMapper {
 	
-	@Select("SELECT id,username,phone,address,password FROM t_user WHERE phone=#{phone}")
+	@Select("SELECT username,phone,address,password FROM t_user WHERE phone=#{phone}")
 	public Map<String, Object> getUserInfo(String phone);
 	
 	@Select("SELECT num FROM websitevisit WHERE website=#{website}")

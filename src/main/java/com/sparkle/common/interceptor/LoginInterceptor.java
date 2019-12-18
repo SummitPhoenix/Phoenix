@@ -22,7 +22,7 @@ public class LoginInterceptor implements HandlerInterceptor {
                     token = cookie.getValue();
                 }
             }
-            if(0L != JWTUtil.verify(token)){
+            if(JWTUtil.verify(token)){
                 return true;
             }
         }
