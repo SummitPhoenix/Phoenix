@@ -12,10 +12,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @MapperScan(basePackages = {"com.sparkle.mapper"})
 @EnableScheduling
 @Configuration
-public class DemoSpringBootApplication {
+public class PhoenixApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DemoSpringBootApplication.class, args);
+		SpringApplication.run(PhoenixApplication.class, args);
 	}
 
 }
