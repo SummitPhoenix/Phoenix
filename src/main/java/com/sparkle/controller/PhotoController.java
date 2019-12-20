@@ -73,16 +73,21 @@ public class PhotoController {
         return list.subList(page,page+10);
     }
 
+    @RequestMapping("/upload")
+    public String upload(){
+        return "upload";
+    }
+
     /**
      * 上传图片文件夹
      */
     @PostMapping("/uploadFolder")
     @ResponseBody
-    public ResponseBean uploadFileFolder(HttpServletRequest request) {
+    public ResponseBean uploadFileFolder(@RequestParam("space") String space, HttpServletRequest request) {
         MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
         //fileFolder为文件项的name值
         List<MultipartFile> files = params.getFiles("fileFolder");
-        String spaceLocation = photoLocation + request.getParameter("space ");
+        String spaceLocation = photoLocation +"/"+space+"/";
         return FileUploadUtil.upload(files, spaceLocation);
     }
 }

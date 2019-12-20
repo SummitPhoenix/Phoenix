@@ -16,8 +16,6 @@ public class FileUploadUtil {
 
     public static ResponseBean upload(List<MultipartFile> files, String photoLocation) {
 
-        System.out.println("upload url:"+photoLocation);
-
         BufferedOutputStream bos = null;
         BufferedInputStream bis = null;
         FileOutputStream fos = null;
@@ -36,7 +34,6 @@ public class FileUploadUtil {
 
                     String fileName = originalFilename.substring(originalFilename.lastIndexOf('/') + 1);
 
-                    System.out.println(fileName);
                     // 读取文件
                     bis = new BufferedInputStream(mf.getInputStream());
                     // 指定存储的路径
@@ -58,9 +55,6 @@ public class FileUploadUtil {
             }
 
             return ResponseBean.success("上传成功");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return ResponseBean.fail("上传失败");
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseBean.fail("上传失败");
