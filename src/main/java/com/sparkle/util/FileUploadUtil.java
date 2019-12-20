@@ -16,15 +16,14 @@ public class FileUploadUtil {
 
     public static ResponseBean upload(List<MultipartFile> files, String photoLocation) {
 
-        String STORAGE_PATH = photoLocation;
-        System.out.println("upload url:"+STORAGE_PATH);
+        System.out.println("upload url:"+photoLocation);
 
         BufferedOutputStream bos = null;
         BufferedInputStream bis = null;
         FileOutputStream fos = null;
 
         // 判断存储的文件夹是否存在
-        File file = new File(STORAGE_PATH);
+        File file = new File(photoLocation);
         if (!file.exists()) {
             file.mkdirs();
         }
@@ -41,7 +40,7 @@ public class FileUploadUtil {
                     // 读取文件
                     bis = new BufferedInputStream(mf.getInputStream());
                     // 指定存储的路径
-                    fos = new FileOutputStream(STORAGE_PATH + fileName);
+                    fos = new FileOutputStream(photoLocation + fileName);
                     bos = new BufferedOutputStream(fos);
 
                     int len = 0;
