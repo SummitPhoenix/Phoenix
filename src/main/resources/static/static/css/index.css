@@ -1,10 +1,25 @@
-#navigate{
-    top:50px;
+#websitenavigate{
+    position: relative;
+    top:100px;
+    left:50px;
+}
+#common{
+    position: relative;
+    left: 40px;
+}
+ul{
+    display: block;
+    position: absolute;
+    float: left;
 }
 
 .website{
-    padding:30px;
+    text-align: center;
+    width: 60px;
+    display: inline-block;
     float: left;
+    margin-left: 30px;
+    margin-right: 30px;
 }
 
 h3{
