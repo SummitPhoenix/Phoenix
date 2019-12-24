@@ -19,22 +19,42 @@ header{
     font-size: 30px;
     color:orangered;
     font-family: consolas, serif;
+    position: relative;
+    top: 0px;
+    display: inline-block;
+    height:30px;
+    list-style: none;
+    float: left;
+    margin-right: 30px;
+    text-decoration:none;
 }
-#layui-nav{
+#nav{
+    height:60px;
+    list-style: none;
     width:100%;
     background-color: #FFFFFF;
     position: fixed;
     top: 0;
     z-index: 999;
 }
-
-.layui-nav-item:hover{
+.nav-item{
+    font-size: 14px;
+    list-style: none;
+    display: inline-block;
+    float: left;
+    margin-left: 30px;
+    position: relative;
+    top: 0px;
+    padding: 5px;
+}
+.nav-item:hover{
     font-weight: bold;
-    border-bottom: 4px solid orangered;
+    border-bottom: 2px solid orangered;
 }
 
-.layui-nav .layui-nav-item a{
-    color:#444444 !important;
+.nav .nav-item a{
+    text-decoration:none;
+    color:#444444;
 }
 /*
 footer{
