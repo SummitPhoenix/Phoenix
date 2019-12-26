@@ -1,0 +1,1 @@
+java -Xms1024m -Xmx1024m -Xmn384m -Xss128k -jar phoenix-0.0.1-SNAPSHOT.jar
