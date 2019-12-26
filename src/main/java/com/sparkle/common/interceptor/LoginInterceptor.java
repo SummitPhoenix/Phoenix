@@ -32,7 +32,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         return setFailResponse(response);
     }
 
-    public boolean setFailResponse(HttpServletResponse response) throws IOException {
+    private boolean setFailResponse(HttpServletResponse response) throws IOException {
         response.setHeader("content-type", "text/json;charset=UTF-8");
         response.getWriter().println("您尚未登录");
         return false;
