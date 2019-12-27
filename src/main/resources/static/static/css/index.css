@@ -38,7 +38,7 @@
     position: relative;
     left: 40px;
 }
-ul{
+div ul{
     display: block;
     position: absolute;
     float: left;
@@ -46,6 +46,7 @@ ul{
 .type{
     font-size: 16px;
     font-weight: 500;
+    margin: 0;
 }
 .website{
     text-align: center;
@@ -58,6 +59,11 @@ ul{
 a{
     font-size: 16px;
     display: inline-block;
+    text-decoration:none;
+}
+a:visited{
+    color:blue;
+    text-decoration:none;
 }
 a:hover{
     color: red;

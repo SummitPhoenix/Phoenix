@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @Date: 2019/11/14 下午7:16
  */
 @Controller
-public class CommonController {
+public class MainController {
 
     @RequestMapping("/")
     public String root() {

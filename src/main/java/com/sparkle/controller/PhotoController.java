@@ -3,6 +3,8 @@ package com.sparkle.controller;
 import com.sparkle.entity.ResponseBean;
 import com.sparkle.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,6 +63,7 @@ public class PhotoController {
         return ResponseBean.success("创建空间成功");
     }
 
+    @Cacheable(cacheNames = {"photolist"})
     @GetMapping("/getPhotoList")
     @ResponseBody
     public List<String> getPhotoList(@RequestParam("space") String space, @RequestParam("page") int page) {
@@ -69,6 +72,7 @@ public class PhotoController {
         List<String> list = new ArrayList<>();
         for(File f:files) {
             list.add(f.getName());
+            System.out.println(f.getName());
         }
         return list.subList(page,page+10);
     }
@@ -81,6 +85,7 @@ public class PhotoController {
     /**
      * 上传图片文件夹
      */
+    @CachePut(value = "photolist", key = "#result.space")
     @PostMapping("/uploadFolder")
     @ResponseBody
     public ResponseBean uploadFileFolder(@RequestParam("space") String space, HttpServletRequest request) {
