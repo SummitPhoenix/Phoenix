@@ -1,10 +1,5 @@
 package com.sparkle.util;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
 /**
  * @Description
  * @Author: XuanXiangHui
@@ -12,18 +7,31 @@ import java.util.concurrent.TimeUnit;
  */
 public class test {
 
-    private static ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, 1, 5, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1) );
-
     public static void main(String[] args) {
+        int[] array = {0,1,2,3,4,5,6,7,8,9};
+        System.out.println(binarySearch(array,5));
+    }
 
-        ThreadFactory threadFactory = threadPoolExecutor.getThreadFactory();
-        threadFactory.newThread(()->{
-            try {
-                Thread.sleep(1000);
-                System.out.println("ThreadPool");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+    /**
+     * 找到该值在数组中的下标，否则返回-1
+     *
+     * @param array
+     * @param key
+     * @return
+     */
+    public static int binarySearch(int[] array, int key) {
+        int left = 0;
+        int right = array.length - 1;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (array[mid] == key) {
+                return mid;
+            } else if (array[mid] < key) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
             }
-        }).start();
+        }
+        return -1;
     }
 }
