@@ -2,6 +2,8 @@ package com.sparkle.common.websocket;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -10,9 +12,14 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
+@Component
 public class TextMessageHandler extends TextWebSocketHandler {
 
+	//当前在线人数
+	private static AtomicInteger currentNum = new AtomicInteger();
+	
     //用于存放所有建立链接的对象
     private Map<String,WebSocketSession> allClients = new HashMap<>();
 
@@ -56,6 +63,7 @@ public class TextMessageHandler extends TextWebSocketHandler {
         if (name != null) {
             allClients.put(name,session);//保存当前用户和链接的关系
         }
+        currentNum.incrementAndGet();
     }
 
     /**
@@ -65,5 +73,6 @@ public class TextMessageHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         super.afterConnectionClosed(session, status);
+        currentNum.decrementAndGet();
     }
 }

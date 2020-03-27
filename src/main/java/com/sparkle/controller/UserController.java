@@ -4,6 +4,7 @@ import com.sparkle.entity.ResponseBean;
 import com.sparkle.entity.User;
 import com.sparkle.mapper.mapper.UserMapper;
 import com.sparkle.service.UserService;
+import com.sparkle.util.IpUtil;
 import com.sparkle.util.JWTUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -63,4 +64,9 @@ public class UserController {
 		return ResponseBean.success("");
 	}
 	
+	@ResponseBody
+	@PostMapping("/getUserLocation")
+	public String getUserLocation(HttpServletRequest request) {
+		return IpUtil.getIpAddr(request);
+	}
 }

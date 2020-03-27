@@ -7,6 +7,7 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
 import java.util.Map;
+
 /**
  * websocket握手的拦截器，检查握手请求和响应，对websockethandler传递属性，用于区别websocket
  * */
@@ -26,7 +27,6 @@ public class ChatIntercepter extends HttpSessionHandshakeInterceptor {
 
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, @Nullable Exception ex) {
-
         System.out.println("握手之后");
         super.afterHandshake(request, response, wsHandler, ex);
     }

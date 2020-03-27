@@ -9,7 +9,7 @@
 		function connection(){
 			var username = document.getElementById("name").value;
 			if('WebSocket' in window){//支持不支持websocket
-				websocket = new WebSocket("ws://localhost:8080/websocket/"+username);
+				websocket = new WebSocket("ws://localhost:14308/websocket/"+username);
 			}else{
 				alert('什么破电脑不支持WebSocket，砸了吧');
 			}
