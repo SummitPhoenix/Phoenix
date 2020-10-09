@@ -27,7 +27,6 @@ public class ChatIntercepter extends HttpSessionHandshakeInterceptor {
 
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, @Nullable Exception ex) {
-
         System.out.println("握手之后");
         super.afterHandshake(request, response, wsHandler, ex);
     }
