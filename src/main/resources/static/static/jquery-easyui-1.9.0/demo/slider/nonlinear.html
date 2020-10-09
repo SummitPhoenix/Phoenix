@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title>Non Linear Slider - jQuery EasyUI Demo</title>
-	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
-	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
-	<link rel="stylesheet" type="text/css" href="../demo.css">
-	<script type="text/javascript" src="../../jquery.min.js"></script>
-	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Non Linear Slider - jQuery EasyUI Demo</title>
+    <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../demo.css">
+    <script type="text/javascript" src="../../jquery.min.js"></script>
+    <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
 </head>
 <body>
-	<h2>Non Linear Slider</h2>
-	<p>This example shows how to create a slider with a non-linear scale.</p>
-	<div style="margin:20px 0 50px 0;"></div>
-	<div style="padding:2px">
-	<input class="easyui-slider" style="width:400px" data-options="
+<h2>Non Linear Slider</h2>
+<p>This example shows how to create a slider with a non-linear scale.</p>
+<div style="margin:20px 0 50px 0;"></div>
+<div style="padding:2px">
+    <input class="easyui-slider" style="width:400px" data-options="
 			showTip:true,
 			rule: [0,'PI/4','PI/2'],
 			min:0,
@@ -40,19 +40,20 @@
 				p.css(opts.reversed?'right':'left', pos);
 			}
 			">
-	</div>
-	<div style="margin-bottom:30px"></div>
-	<div id="cc" class="easyui-panel" style="position:relative;width:404px;height:304px;">
-	</div>
-	
-	<style scoped="scoped">
-		.point{
-			position:absolute;
-			width:2px;
-			height:2px;
-			font-size:0;
-			background:red;
-		}
-	</style>
+</div>
+<div style="margin-bottom:30px"></div>
+<div id="cc" class="easyui-panel" style="position:relative;width:404px;height:304px;">
+</div>
+
+<style scoped="scoped">
+    .point {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        font-size: 0;
+        background: red;
+    }
+
+</style>
 </body>
 </html>

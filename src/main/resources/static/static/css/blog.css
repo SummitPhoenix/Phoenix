@@ -1,60 +1,73 @@
-.append{
-	padding:5px;
+.append {
+    padding: 5px;
 }
-#content{
-	width:800px;
-	height:400px;
+
+#content {
+    width: 800px;
+    height: 400px;
 }
-#blog{
-	position:relative;
-	width: 1000px;
-	border: 1px solid #BCE8F1;
-	padding:20px;
+
+#blog {
+    position: relative;
+    width: 1000px;
+    border: 1px solid #BCE8F1;
+    padding: 20px;
 }
-#edit{
-	position: relative;
-	top:100px;
+
+#edit {
+    position: relative;
+    top: 100px;
 }
-#title{
-	font-size: 24px;
-	font-weight: 700;
-	color:#333;
+
+#title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
 }
-.tag{
-	float: left;
-	margin-right: 20px;
-	color: #3366FF;
+
+.tag {
+    float: left;
+    margin-right: 20px;
+    color: #3366FF;
 }
-#time{
-	font-size: 14px;
-	color:#858585;
+
+#time {
+    font-size: 14px;
+    color: #858585;
 }
-#author{
-	color: #78a5f1;
+
+#author {
+    color: #78a5f1;
 }
-.subTitle{
-	font-size: 24px;
-	font-weight: 700;
-	color: #4f4f4f;
+
+.subTitle {
+    font-size: 24px;
+    font-weight: 700;
+    color: #4f4f4f;
 }
-.paraGraph{
-	font-size: 16px;
-	color:#4d4d4d;
+
+.paraGraph {
+    font-size: 16px;
+    color: #4d4d4d;
 }
-.weightParaGraph{
-	font-size: 16px;
+
+.weightParaGraph {
+    font-size: 16px;
     color: #4d4d4d;
     font-weight: 700;
 }
-.picture{
-	width:800px;
-	position: relative;
-	left: 100px;
+
+.picture {
+    width: 800px;
+    position: relative;
+    left: 100px;
 }
-#upload{
-	position: relative;
-	top: 150px;
+
+#upload {
+    position: relative;
+    top: 150px;
 }
-#submit{
-	padding:5px;
+
+#submit {
+    padding: 5px;
 }

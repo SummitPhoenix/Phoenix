@@ -40,7 +40,7 @@ public class FileUploadUtil {
                     fos = new FileOutputStream(photoLocation + fileName);
                     bos = new BufferedOutputStream(fos);
 
-                    int len = 0;
+                    int len;
                     byte[] buffer = new byte[10240];
                     while ((len = bis.read(buffer)) != -1) {
                         bos.write(buffer, 0, len);

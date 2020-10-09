@@ -1,7 +1,7 @@
 //初始化
-$(function(){
+$(function () {
     $("#header").load("header.html");
     $("#footer").load("footer.html");
-    $("#navigate").attr("class","layui-nav-item layui-this");
+    $("#navigate").attr("class", "layui-nav-item layui-this");
 });
 

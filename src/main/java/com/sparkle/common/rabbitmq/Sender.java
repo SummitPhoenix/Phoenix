@@ -39,12 +39,12 @@ public class Sender implements RabbitTemplate.ConfirmCallback, ReturnCallback {
 
     @Override
     public void returnedMessage(Message message, int replyCode, String replyText, String exchange, String routingKey) {
-        System.out.println(message.getMessageProperties().getCorrelationId()+ " 发送失败");
+        System.out.println(message.getMessageProperties().getCorrelationId() + " 发送失败");
 
     }
 
     //发送消息，不需要实现任何接口，供外部调用。
-    public void send(String msg, String routingKey){
+    public void send(String msg, String routingKey) {
 
         CorrelationData correlationId = new CorrelationData(UUID.randomUUID().toString());
 

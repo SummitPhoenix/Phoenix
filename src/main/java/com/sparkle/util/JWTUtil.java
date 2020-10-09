@@ -16,19 +16,23 @@ import java.util.Map;
  * @Date: 2019/12/6 上午9:51
  */
 public class JWTUtil {
-    //过期时间
+    /**
+     * 过期时间
+     */
     private static final long EXPIRE_TIME = 30 * 60 * 1000;
-    //私钥
+    /**
+     * 私钥
+     */
     private static final String TOKEN_SECRET = "T3u5A2k9";
 
     /**
      * 生成签名，15分钟过期
      */
     public static String sign(Map<String, Object> userInfo) {
-        String phone = (String)userInfo.get("phone");
-        String username = (String)userInfo.get("username");
-        String role = (String)userInfo.get("role");
-        String address = (String)userInfo.get("address");
+        String phone = (String) userInfo.get("phone");
+        String username = (String) userInfo.get("username");
+        String role = (String) userInfo.get("role");
+        String address = (String) userInfo.get("address");
 
         try {
             // 设置过期时间
@@ -56,9 +60,6 @@ public class JWTUtil {
 
     /**
      * 检验token是否正确
-     *
-     * @param token
-     * @return
      */
     public static boolean verify(String token) {
         try {
@@ -72,8 +73,8 @@ public class JWTUtil {
         }
     }
 
-    public static Map<String, String> parseJWT(String token){
-        return JSONObject.parseObject(JWT.decode(token).getPayload(),Map.class);
+    public static Map<String, String> parseJwt(String token) {
+        return JSONObject.parseObject(JWT.decode(token).getPayload(), Map.class);
     }
 
 }

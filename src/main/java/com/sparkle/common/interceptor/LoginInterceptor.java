@@ -15,17 +15,17 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         Cookie[] cookies = request.getCookies();
-        if(cookies != null){
+        if (cookies != null) {
             String token = "";
-            for(Cookie cookie:cookies){
-                if("token".equals(cookie.getName())){
+            for (Cookie cookie : cookies) {
+                if ("token".equals(cookie.getName())) {
                     token = cookie.getValue();
                 }
             }
-            if("".equals(token)){
+            if ("".equals(token)) {
                 return setFailResponse(response);
             }
-            if(JWTUtil.verify(token)){
+            if (JWTUtil.verify(token)) {
                 return true;
             }
         }

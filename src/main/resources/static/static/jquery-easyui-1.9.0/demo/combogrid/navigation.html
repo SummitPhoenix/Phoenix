@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title>Navigate ComboGrid - jQuery EasyUI Demo</title>
-	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
-	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
-	<link rel="stylesheet" type="text/css" href="../demo.css">
-	<script type="text/javascript" src="../../jquery.min.js"></script>
-	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Navigate ComboGrid - jQuery EasyUI Demo</title>
+    <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../demo.css">
+    <script type="text/javascript" src="../../jquery.min.js"></script>
+    <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
 </head>
 <body>
-	<h2>Navigate ComboGrid</h2>
-	<p>Navigate through grid items with keyboard to select an item.</p>
-	<div style="margin:20px 0">
-		<input type="checkbox" checked onchange="$('#cc').combogrid({selectOnNavigation:$(this).is(':checked')})">
-		<span>SelectOnNavigation</span>
-	</div>
-	<div class="easyui-panel" style="width:100%;max-width:400px;padding:30px 60px;">
-		<div style="margin-bottom:20px">
-			<select id="cc" class="easyui-combogrid" style="width:100%" data-options="
+<h2>Navigate ComboGrid</h2>
+<p>Navigate through grid items with keyboard to select an item.</p>
+<div style="margin:20px 0">
+    <input type="checkbox" checked onchange="$('#cc').combogrid({selectOnNavigation:$(this).is(':checked')})">
+    <span>SelectOnNavigation</span>
+</div>
+<div class="easyui-panel" style="width:100%;max-width:400px;padding:30px 60px;">
+    <div style="margin-bottom:20px">
+        <select id="cc" class="easyui-combogrid" style="width:100%" data-options="
 					panelWidth: 500,
 					idField: 'itemid',
 					textField: 'productname',
@@ -36,8 +36,8 @@
 					label: 'Select Item:',
 					labelPosition: 'top'
 				">
-			</select>
-		</div>
-	</div>
+        </select>
+    </div>
+</div>
 </body>
 </html>

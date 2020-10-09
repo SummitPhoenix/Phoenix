@@ -2,7 +2,7 @@ server:
   port: 14308
   address: 0.0.0.0
   #servlet:
-    #context-path: /phoenix
+  #context-path: /phoenix
   tomcat:
     uri-encoding: UTF-8
     max-threads: 100
@@ -17,16 +17,16 @@ server:
 photoLocation: D:/static/picture
 
 spring:
-#  rabbitmq:
-#    host: 127.0.0.1
-#    port: 5672
-#    username: admin
-#    password: admin
-#    virtual-host: /
-#    publisher-confirms: true
-#    publisher-returns: true
-#    template:
-#      mandatory: true
+  #  rabbitmq:
+  #    host: 127.0.0.1
+  #    port: 5672
+  #    username: admin
+  #    password: admin
+  #    virtual-host: /
+  #    publisher-confirms: true
+  #    publisher-returns: true
+  #    template:
+  #      mandatory: true
 
 
   mvc:
@@ -53,7 +53,7 @@ spring:
       #这里是访问项目外文件夹的关键
       location: D:/static
 
-  thymeleaf: 
+  thymeleaf:
     prefix: classpath:/templates/
   #数据源配置
   datasource:
@@ -71,23 +71,23 @@ spring:
       validation-timeout: 1000
       leak-detection-threshold: 30000
     #热部署生效
-  devtools: 
-    restart: 
+  devtools:
+    restart:
       enabled: true
       #设置重启的目录
       additional-paths: src/main/
   aop:
     auto: true
     proxy-target-class: true
-    
+
 mybatis:
-    #实体类所做包
-    type-aliases-package: com.ay.demo.entity
-    #mapper.xml所在位置
-    mapper-locations: classpath:com.sparkle.mapper/*.xml
-    configuration:
-      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-      call-setters-on-nulls: true
+  #实体类所做包
+  type-aliases-package: com.ay.demo.entity
+  #mapper.xml所在位置
+  mapper-locations: classpath:com.sparkle.mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    call-setters-on-nulls: true
 
 #无需拦截的相关请求资源
 interceptor-config:

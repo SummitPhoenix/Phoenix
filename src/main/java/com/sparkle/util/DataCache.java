@@ -16,6 +16,6 @@ public class DataCache {
     /**
      * key spaceId
      */
-    public Map<String,ArrayList<String>> photoList = new HashMap<>();
+    public static Map<String, ArrayList<String>> photoList = new HashMap<>();
 
 }

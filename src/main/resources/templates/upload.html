@@ -1,74 +1,74 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>上传图片文件夹</title>
-	<script src="jquery.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>上传图片文件夹</title>
+    <script src="jquery.js"></script>
 </head>
 <body>
-<form action="/photo/uploadFolder" method="post" enctype="multipart/form-data" >
-	<input id="fileFolder" name="fileFolder" type="file" webkitdirectory mozdirectory>
-	<input type="hidden" name="space" value="BellaLucas">
-	<input id="upload" type="submit" value="提交文件夹">
+<form action="/photo/uploadFolder" method="post" enctype="multipart/form-data">
+    <input id="fileFolder" name="fileFolder" type="file" webkitdirectory mozdirectory>
+    <input type="hidden" name="space" value="BellaLucas">
+    <input id="upload" type="submit" value="提交文件夹">
 </form>
 </body>
 <script>
-	$(function() {
-		$('#file').change(function(e) {
-			console.log(e.target.files)
-			var image= new FormData();
-			image.append('avatar', e.target.files[]);
-			$.ajax({
-				async:false,
-				url:"/photo/uploadFolder",
-				type:'post',
-				data:image,//请求的数据
-				dataType:'json',//设置返回的数据类型
-				cache:true,
-				success:function (data) {//请求成功后返回的数据会封装在回调函数的第一个参数中
+    $(function () {
+        $('#file').change(function (e) {
+            console.log(e.target.files)
+            var image = new FormData();
+            image.append('avatar', e.target.files[]);
+            $.ajax({
+                async: false,
+                url: "/photo/uploadFolder",
+                type: 'post',
+                data: image,//请求的数据
+                dataType: 'json',//设置返回的数据类型
+                cache: true,
+                success: function (data) {//请求成功后返回的数据会封装在回调函数的第一个参数中
 
-					return;
-				},
-				error:function () {
-					console.log('请求失败！')
-				},
-			});
-		})
-	})
+                    return;
+                },
+                error: function () {
+                    console.log('请求失败！')
+                },
+            });
+        })
+    })
 
-	document.getElementById('fileFolder').onchange = function(e) {
-		actual_filesSize=0;
-		//是否选中文件夹  文件夹是否为空  数量和大小是否超过限制
-		//判断是否选中文件
-		var file=$("#fileFolder").val();
-		var filesCount = 10;
-		var filesSize = 10485760;
-		if(file!=""){
-			var files = e.target.files;            // files是选中的文件夹数组
-			//文件数量
-			actual_filesCount = files.length;
-			if(actual_filesCount > filesCount){
-				$("#tips").text(msg2+filesCount+msg3);
-				document.getElementById("tips").style.color="red";
-				return;
-			}
-			//修改tips文本框内容
-			$("#tips").text(actual_filesCount+"选择完成");
-			/* document.getElementById("tips").style.color="black"; */
+    document.getElementById('fileFolder').onchange = function (e) {
+        actual_filesSize = 0;
+        //是否选中文件夹  文件夹是否为空  数量和大小是否超过限制
+        //判断是否选中文件
+        var file = $("#fileFolder").val();
+        var filesCount = 10;
+        var filesSize = 10485760;
+        if (file != "") {
+            var files = e.target.files;            // files是选中的文件夹数组
+            //文件数量
+            actual_filesCount = files.length;
+            if (actual_filesCount > filesCount) {
+                $("#tips").text(msg2 + filesCount + msg3);
+                document.getElementById("tips").style.color = "red";
+                return;
+            }
+            //修改tips文本框内容
+            $("#tips").text(actual_filesCount + "选择完成");
+            /* document.getElementById("tips").style.color="black"; */
 
-			for (var i = 0; i< files.length; ++i){
-				actual_filesSize=actual_filesSize+files[i].size;
-				if(actual_filesSize > filesSize){
-					$("#tips").text(msg4+(filesSize/1024/1024)+"M");
-					document.getElementById("tips").style.color="red";
-					return;
-				}
-			}
-		}else{
-			$("#tips").text(msg);
-			document.getElementById("tips").style.color="red";
-			return;
-		}
-	};
+            for (var i = 0; i < files.length; ++i) {
+                actual_filesSize = actual_filesSize + files[i].size;
+                if (actual_filesSize > filesSize) {
+                    $("#tips").text(msg4 + (filesSize / 1024 / 1024) + "M");
+                    document.getElementById("tips").style.color = "red";
+                    return;
+                }
+            }
+        } else {
+            $("#tips").text(msg);
+            document.getElementById("tips").style.color = "red";
+            return;
+        }
+    };
 </script>
 </html>

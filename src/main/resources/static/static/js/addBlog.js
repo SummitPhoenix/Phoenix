@@ -1,5 +1,5 @@
 //初始化
-$(document).ready(function(){
+$(document).ready(function () {
     $("#header").load("header.html");
     $("#footer").load("footer.html");
     document.getElementById("index").className = "layui-nav-item  layui-this";
@@ -14,58 +14,62 @@ var createTime;
 $("#addTitle").click(function () {
     var content = $("#content").val();
     createTime = new Date().Format("yyyy年MM月dd日 HH:mm:ss");
-    $("#addBlog").append("<p id='title'>"+content+"</p></br><span id='time'>"+createTime+"</span>&nbsp&nbsp&nbsp&nbsp<a id='author'>打上花火</a><hr/>");
+    $("#addBlog").append("<p id='title'>" + content + "</p></br><span id='time'>" + createTime + "</span>&nbsp&nbsp&nbsp&nbsp<a id='author'>打上花火</a><hr/>");
     title = content;
     $("#content").val("");
 })
 $("#addSubTitle").click(function () {
     var content = $("#content").val();
-    $("#addBlog").append("<br/><br/><strong class='subTitle'>"+content+"<strong/><br/>");
+    $("#addBlog").append("<br/><br/><strong class='subTitle'>" + content + "<strong/><br/>");
     $("#content").val("");
 })
 $("#addTag").click(function () {
     var content = $("#content").val();
-    $("#addBlog").append("<span class='tag'>"+content+"<span/>");
-    label += content+",";
+    $("#addBlog").append("<span class='tag'>" + content + "<span/>");
+    label += content + ",";
     $("#content").val("");
 })
 $("#addParaGraph").click(function () {
     var content = $("#content").val();
-    $("#addBlog").append("<br/><pre class='paraGraph'>"+content+"</pre><br/>");
+    $("#addBlog").append("<br/><pre class='paraGraph'>" + content + "</pre><br/>");
     $("#content").val("");
 })
 $("#addWeightParaGraph").click(function () {
     var content = $("#content").val();
-    $("#addBlog").append("<br/><pre class='weightParaGraph'>"+content+"</pre><br/>");
+    $("#addBlog").append("<br/><pre class='weightParaGraph'>" + content + "</pre><br/>");
     $("#content").val("");
 })
 $("#addJPG").click(function () {
     var content = $("#content").val();
-    $("#addBlog").append("<img class='picture' src="+content+static/img/.jpg'><br/>");
+    $("#addBlog").append("<img class='picture' src=" + content + static
+    /img/.jpg
+    '><br/>");
     $("#content").val("");
 })
 $("#addPNG").click(function () {
     var content = $("#content").val();
-    $("#addBlog").append("<img class='picture' src="+content+static/img/.png'><br/>");
+    $("#addBlog").append("<img class='picture' src=" + content + static
+    /img/.png
+    '><br/>");
     $("#content").val("");
 })
 $("#submit").click(function () {
     var content = $("#addBlog").html();
-    label = label.substring(0,label.length-1);
-    var json = {'label':label,'title':title,'author':author,'createTime':createTime,'content':content};
+    label = label.substring(0, label.length - 1);
+    var json = {'label': label, 'title': title, 'author': author, 'createTime': createTime, 'content': content};
     $.ajax({
-        async:false,
-        url:"insertBlog",
-        type:'post',
-        contentType:"application/json",
-        data:JSON.stringify(json),//请求的数据
-        dataType:'json',//设置返回的数据类型
-        cache:false,
-        success:function (data) {//请求成功后返回的数据会封装在回调函数的第一个参数中
+        async: false,
+        url: "insertBlog",
+        type: 'post',
+        contentType: "application/json",
+        data: JSON.stringify(json),//请求的数据
+        dataType: 'json',//设置返回的数据类型
+        cache: false,
+        success: function (data) {//请求成功后返回的数据会封装在回调函数的第一个参数中
             alert("上传成功");
             return;
         },
-        error:function () {
+        error: function () {
             console.log('请求失败！')
         },
     });

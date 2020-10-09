@@ -6,6 +6,6 @@ import java.util.Map;
 
 public interface UserService {
 
-	ResponseBean login(String phone, String password, Map<String, Object> userInfo);
+    ResponseBean login(String phone, String password, Map<String, Object> userInfo);
 
 }

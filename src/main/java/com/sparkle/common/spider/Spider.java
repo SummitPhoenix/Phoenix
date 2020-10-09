@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class Spider {
     @RequestMapping("")
-    public String spider(){
+    public String spider() {
         return "";
     }
 }

@@ -1,37 +1,38 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
-    <head>
-        <meta http-equiv="Cache-Control" content="max-age=7200" />
-        <meta charset="UTF-8"/>
-        <link rel="shortcut icon" href="http://www.localhost:8080/favicon.ico"/>
-        <title>博客</title>
-        <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-        <script src="static/layui/layui.js"></script>
-        <link href="static/layui/css/layui.css" rel="stylesheet">
-        <link href="static/css/common.css" rel="stylesheet" type="text/css">
+<head>
+    <meta http-equiv="Cache-Control" content="max-age=7200"/>
+    <meta charset="UTF-8"/>
+    <link rel="shortcut icon" href="http://www.localhost:8080/favicon.ico"/>
+    <title>博客</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="static/layui/layui.js"></script>
+    <link href="static/layui/css/layui.css" rel="stylesheet">
+    <link href="static/css/common.css" rel="stylesheet" type="text/css">
 
-		<link href="static/css/blog.css" rel="stylesheet" type="text/css">
-        <script src="static/js/blog.js"></script>
+    <link href="static/css/blog.css" rel="stylesheet" type="text/css">
+    <script src="static/js/blog.js"></script>
 
-    </head>
-    <body>
-       	<header class="header">
-       		
-		</header>
-       	<article>
-			<div id="blog" th:utext="${content}">
-       			
-       		</div>
-       	</article>
-       	<footer class="footer">
-       		
-       	</footer>
-    </body>
-    <script type="text/javascript">
-	    $(function(){
-	        $(".header").load("header.html");
-	        $(".footer").load("footer.html");
-	    });
-	</script>
+</head>
+<body>
+<header class="header">
+
+</header>
+<article>
+    <div id="blog" th:utext="${content}">
+
+    </div>
+</article>
+<footer class="footer">
+
+</footer>
+</body>
+<script type="text/javascript">
+    $(function () {
+        $(".header").load("header.html");
+        $(".footer").load("footer.html");
+    });
+
+</script>
 </html>

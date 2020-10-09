@@ -1,30 +1,33 @@
 server:
-  port: 14308
+  servlet:
+    context-path: /phoenix
+  port: 80
   address: 0.0.0.0
   tomcat:
     uri-encoding: UTF-8
-    max-threads: 100
     max-connections: 100
-    min-spare-threads: 100
+    threads:
+      max: 100
+      min-spare: 10
   compression:
     enabled: true
     mime-types: text/html, text/xml, text/plain, text/css, text/javascript, application/javascript, application/json
     excluded-user-agents: image/jpeg, image/png, video/mp4
 
 
-photoLocation: /home/static/picture
+photoLocation: E:/file/img
 
 spring:
-#  rabbitmq:
-#    host: 127.0.0.1
-#    port: 5672
-#    username: admin
-#    password: admin
-#    virtual-host: /
-#    publisher-confirms: true
-#    publisher-returns: true
-#    template:
-#      mandatory: true
+  #  rabbitmq:
+  #    host: 127.0.0.1
+  #    port: 5672
+  #    username: admin
+  #    password: admin
+  #    virtual-host: /
+  #    publisher-confirms: true
+  #    publisher-returns: true
+  #    template:
+  #      mandatory: true
 
 
   mvc:
@@ -51,13 +54,13 @@ spring:
       #这里是访问项目外文件夹的关键
       location: /home/static
 
-  thymeleaf: 
+  thymeleaf:
     prefix: classpath:/templates/
   #数据源配置
   datasource:
     url: jdbc:mysql://localhost:3306/sparkle?useAffectedRows=true&useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8
     username: root
-    password: root
+    password: krcmAiter3#H
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       auto-commit: true
@@ -69,23 +72,23 @@ spring:
       validation-timeout: 1000
       leak-detection-threshold: 30000
     #热部署生效
-  devtools: 
-    restart: 
+  devtools:
+    restart:
       enabled: true
       #设置重启的目录
       additional-paths: src/main/
   aop:
     auto: true
     proxy-target-class: true
-    
+
 mybatis:
-    #实体类所做包
-    type-aliases-package: com.ay.demo.entity
-    #mapper.xml所在位置
-    mapper-locations: classpath:com.sparkle.mapper/*.xml
-    configuration:
-      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-      call-setters-on-nulls: true
+  #实体类所做包
+  type-aliases-package: com.ay.demo.entity
+  #mapper.xml所在位置
+  mapper-locations: classpath:com.sparkle.mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    call-setters-on-nulls: true
 
 #无需拦截的相关请求资源
 interceptor-config:
