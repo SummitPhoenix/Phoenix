@@ -2,23 +2,23 @@ package com.sparkle.util;
 
 
 import com.sparkle.entity.ResponseBean;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.List;
 
 /**
- * @Description
- * @Author: XuanXiangHui
- * @Date: 2019/11/29 下午1:31
+ * @author Smartisan
  */
+@Slf4j
 public class FileUploadUtil {
 
     public static ResponseBean upload(List<MultipartFile> files, String photoLocation) {
 
-        BufferedOutputStream bos = null;
-        BufferedInputStream bis = null;
-        FileOutputStream fos = null;
+        BufferedOutputStream bos;
+        BufferedInputStream bis;
+        FileOutputStream fos;
 
         // 判断存储的文件夹是否存在
         File file = new File(photoLocation);
@@ -31,7 +31,6 @@ public class FileUploadUtil {
             for (MultipartFile mf : files) {
                 if (!mf.isEmpty()) {
                     String originalFilename = mf.getOriginalFilename();
-
                     String fileName = originalFilename.substring(originalFilename.lastIndexOf('/') + 1);
 
                     // 读取文件
@@ -56,7 +55,7 @@ public class FileUploadUtil {
 
             return ResponseBean.success("上传成功");
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("fileUpload ERROR:", e);
             return ResponseBean.fail("上传失败");
         }
     }

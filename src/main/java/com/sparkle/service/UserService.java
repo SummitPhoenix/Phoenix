@@ -8,4 +8,5 @@ public interface UserService {
 
     ResponseBean login(String phone, String password, Map<String, Object> userInfo);
 
+    ResponseBean calaulate(double a, double b);
 }

@@ -12,6 +12,7 @@ import java.util.Map;
 /**
  * @author sparkle
  */
+//@DubboService(version = "1.0.0")
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -32,6 +33,11 @@ public class UserServiceImpl implements UserService {
         }
         userInfo.remove("password");
         return ResponseBean.success(userInfo);
+    }
+
+    @Override
+    public ResponseBean calaulate(double a, double b) {
+        return ResponseBean.success(a * b);
     }
 
 }

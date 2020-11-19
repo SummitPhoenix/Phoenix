@@ -14,10 +14,14 @@ server:
     mime-types: text/html, text/xml, text/plain, text/css, text/javascript, application/javascript, application/json
     excluded-user-agents: image/jpeg, image/png, video/mp4
 
-
-photoLocation: E:/file/img
+fileLocation: E:/file/
+#fileLocation: /home/file/
+mailList: 1120965621@qq.com,872174823@qq.com
 
 spring:
+  application:
+    name: backend
+
   #  rabbitmq:
   #    host: 127.0.0.1
   #    port: 5672
@@ -81,6 +85,22 @@ spring:
     auto: true
     proxy-target-class: true
 
+logging:
+  level:
+    root: info
+
+#  kafka:
+#    bootstrap-servers: 192.168.0.197:9092
+#    producer:
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+#    consumer:
+#      group-id: test
+#      enable-auto-commit: true
+#      auto-commit-interval: 1000
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
 mybatis:
   #实体类所做包
   type-aliases-package: com.ay.demo.entity
@@ -89,6 +109,18 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     call-setters-on-nulls: true
+
+#dubbo:
+#  #dubbo协议配置
+#  protocol:
+#    name: dubbo
+#    port: 8081
+#  #dubbo注册中心地址
+#  registry:
+#    address: zookeeper://localhost:2181
+#  #扫描dubbo组件的基本包
+#  scan:
+#    base-packages: com.sparkle.service.Impl
 
 #无需拦截的相关请求资源
 interceptor-config:
@@ -109,3 +141,5 @@ interceptor-config:
     - /*.jpg
     - /*.png
     - /favicon.ico
+    - /kafka/send
+    - /file/**

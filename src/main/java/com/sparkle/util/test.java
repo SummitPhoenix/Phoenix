@@ -10,6 +10,18 @@ public class test {
     public static void main(String[] args) {
         int[] array = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         System.out.println(binarySearch(array, 0));
+        String str = "synchronized";
+        System.out.println(hashCode(str.toCharArray(), 0));
+    }
+
+    public static int hashCode(char[] value, int hash) {
+        int h = hash;
+        if (h == 0 && value.length > 0) {
+            for (char c : value) {
+                h = 31 * h + c;
+            }
+        }
+        return h;
     }
 
     /**

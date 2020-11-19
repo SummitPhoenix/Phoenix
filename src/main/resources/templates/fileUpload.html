@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>上传图片文件夹</title>
-    <script src="/phoenix/static/jquery-easyui-1.9.0/jquery.easyui.min.js"></script>
+    <title>上传文件夹</title>
+    <script type="text/javascript" src="/phoenix/static/jquery-easyui-1.9.0/jquery.easyui.min.js"></script>
 </head>
 <body>
-<form action="/photo/uploadFolder" method="post" enctype="multipart/form-data">
+<form action="uploadFolder" method="post" enctype="multipart/form-data">
     <input id="fileFolder" name="fileFolder" type="file" webkitdirectory mozdirectory>
-    <input type="hidden" name="space" value="BellaLucas">
+    <input type="text" name="space">
     <input id="upload" type="submit" value="提交文件夹">
 </form>
 </body>
@@ -16,11 +16,11 @@
     $(function () {
         $('#file').change(function (e) {
             console.log(e.target.files)
-            var image = new FormData();
-            image.append('avatar', e.target.files[]);
+            let image = new FormData();
+            image.append('avatar', e.target.files);
             $.ajax({
                 async: false,
-                url: "/photo/uploadFolder",
+                url: "uploadFolder",
                 type: 'post',
                 data: image,//请求的数据
                 dataType: 'json',//设置返回的数据类型
@@ -37,16 +37,17 @@
     })
 
     document.getElementById('fileFolder').onchange = function (e) {
-        actual_filesSize = 0;
+        let actual_filesSize = 0;
         //是否选中文件夹  文件夹是否为空  数量和大小是否超过限制
         //判断是否选中文件
-        var file = $("#fileFolder").val();
-        var filesCount = 10;
-        var filesSize = 10485760;
-        if (file != "") {
-            var files = e.target.files;            // files是选中的文件夹数组
+        let file = $("#fileFolder").val();
+        let filesCount = 10;
+        let filesSize = 10485760;
+        if (file !== "") {
+            // files是选中的文件夹数组
+            let files = e.target.files;
             //文件数量
-            actual_filesCount = files.length;
+            let actual_filesCount = files.length;
             if (actual_filesCount > filesCount) {
                 $("#tips").text(msg2 + filesCount + msg3);
                 document.getElementById("tips").style.color = "red";
@@ -56,7 +57,7 @@
             $("#tips").text(actual_filesCount + "选择完成");
             /* document.getElementById("tips").style.color="black"; */
 
-            for (var i = 0; i < files.length; ++i) {
+            for (let i = 0; i < files.length; ++i) {
                 actual_filesSize = actual_filesSize + files[i].size;
                 if (actual_filesSize > filesSize) {
                     $("#tips").text(msg4 + (filesSize / 1024 / 1024) + "M");
@@ -67,7 +68,6 @@
         } else {
             $("#tips").text(msg);
             document.getElementById("tips").style.color = "red";
-            return;
         }
     };
 </script>

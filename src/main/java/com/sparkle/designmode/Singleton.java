@@ -1,4 +1,4 @@
-package com.sparkle.util;
+package com.sparkle.designmode;
 
 public class Singleton {
     private volatile static Singleton singleton;
