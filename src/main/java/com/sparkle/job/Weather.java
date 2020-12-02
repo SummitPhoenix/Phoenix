@@ -1,6 +1,8 @@
-package com.sparkle.util;
+package com.sparkle.job;
 
 import com.alibaba.fastjson.JSON;
+import com.sparkle.util.HttpClientUtil;
+import com.sparkle.util.MailSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,13 +19,13 @@ import java.util.Map;
 public class Weather {
 
     @Value("${mailList}")
-    private static String mailList;
+    private String mailList;
 
     /**
-     * 周一至周五 7:55执行
+     * 周一至周五 7:30执行
      */
-    @Scheduled(cron = "* 55 7 * * 1,2,3,4,5 ")
-    public static void weatherWarnJob() {
+    @Scheduled(cron = "1 30 7 * * 1,2,3,4,5")
+    public void weatherWarnJob() {
         String url = "https://www.tianqiapi.com/api?version=v6&appid=91363113&appsecret=Bu02ieN7";
         String appid = "91363113";
         String appsecret = "Bu02ieN7";
@@ -43,23 +45,19 @@ public class Weather {
             entry.setValue(value);
         }
 
+        log.info("WeatherWarn 天气预警: {}", weatherInfo);
+
         String wea = (String) weatherInfo.get("wea");
         if (!wea.contains("雨") && !wea.contains("雪")) {
             return;
         }
 
-        String text = weatherInfo.get("wea") + "\r\n";
-        text += "气温:" + weatherInfo.get("tem") + "°  " + weatherInfo.get("tem2") + "°-" + weatherInfo.get("tem1") + "°\r\n";
-        text += weatherInfo.get("air_tips") + "\r\n";
+        String text = wea + "<br>";
+        text += "气温:" + weatherInfo.get("tem") + "°    " + weatherInfo.get("tem2") + "°-" + weatherInfo.get("tem1") + "°<br>";
         text += "" + weatherInfo.get("city") + " " + weatherInfo.get("week") + " " + weatherInfo.get("update_time");
-
-        String title = weatherInfo.get("wea") + " [天气提醒]";
+        String title = wea + " [天气提醒]";
 
         MailSender.sendMail(title, text, mailList.split(","));
-    }
-
-    public static void main(String[] args) {
-        weatherWarnJob();
     }
 
 }

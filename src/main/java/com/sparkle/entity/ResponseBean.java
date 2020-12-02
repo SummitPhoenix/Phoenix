@@ -13,30 +13,30 @@ public class ResponseBean implements Serializable {
     private static final String FAIL_CODE = "FAIL";
 
     private String code;
+    private String msg;
     private Object data;
-    private String error;
 
     public static ResponseBean success(Object data) {
         ResponseBean responseBean = new ResponseBean();
         responseBean.setCode(SUCCESS_CODE);
         responseBean.setData(data);
-        responseBean.setError("");
+        responseBean.setMsg("");
         return responseBean;
     }
 
-    public static ResponseBean fail(Object data, String error) {
+    public static ResponseBean fail(Object data, String msg) {
         ResponseBean responseBean = new ResponseBean();
         responseBean.setCode(FAIL_CODE);
         responseBean.setData(data);
-        responseBean.setError(error);
+        responseBean.setMsg(msg);
         return responseBean;
     }
 
-    public static ResponseBean fail(String error) {
+    public static ResponseBean fail(String msg) {
         ResponseBean responseBean = new ResponseBean();
         responseBean.setCode(FAIL_CODE);
         responseBean.setData("");
-        responseBean.setError(error);
+        responseBean.setMsg(msg);
         return responseBean;
     }
 
@@ -48,19 +48,19 @@ public class ResponseBean implements Serializable {
         this.code = code;
     }
 
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
     public Object getData() {
         return data;
     }
 
     public void setData(Object data) {
         this.data = data;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
     }
 }

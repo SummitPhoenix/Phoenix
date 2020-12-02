@@ -2,6 +2,7 @@ package com.sparkle.controller;
 
 import com.sparkle.entity.ResponseBean;
 import com.sparkle.util.FileUploadUtil;
+import com.sparkle.util.PageUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -10,10 +11,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Smartisan
@@ -59,8 +57,26 @@ public class FileController {
             return ResponseBean.fail("空间名已被使用");
         }
         File dir = new File(fileLocation + spaceName);
-        dir.mkdirs();
+        if (!dir.mkdirs()) {
+            return ResponseBean.fail("创建空间文件夹失败");
+        }
         return ResponseBean.success("创建空间成功");
+    }
+
+    @GetMapping("/space/{type}/{space}/{page}")
+    @ResponseBody
+    public List<String> getFileList(@PathVariable("type") String type, @PathVariable("space") String space, @PathVariable("page") int page) {
+        space = type + "/" + space;
+        File file = new File(fileLocation + space);
+        File[] files = file.listFiles();
+        if (files == null || files.length == 0) {
+            return Collections.emptyList();
+        }
+        List<String> list = new ArrayList<>();
+        for (File f : files) {
+            list.add(f.getName());
+        }
+        return PageUtil.subList(list, page, 10);
     }
 
     /**

@@ -14,8 +14,8 @@ server:
     mime-types: text/html, text/xml, text/plain, text/css, text/javascript, application/javascript, application/json
     excluded-user-agents: image/jpeg, image/png, video/mp4
 
-fileLocation: E:/file/
-#fileLocation: /home/file/
+#fileLocation: E:/file/
+fileLocation: /home/phoenix/file/
 mailList: 1120965621@qq.com,872174823@qq.com
 
 spring:

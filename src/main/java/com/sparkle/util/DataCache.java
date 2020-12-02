@@ -10,11 +10,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @Description
- * @Author: XuanXiangHui
- * @Date: 2019/12/30 下午3:42
- */
 @Component
 public class DataCache {
     /**

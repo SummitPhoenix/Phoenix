@@ -2,8 +2,8 @@ package com.sparkle.controller;
 
 import com.sparkle.entity.ResponseBean;
 import com.sparkle.util.FileUploadUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +21,7 @@ import java.util.Set;
  * @Author: XuanXiangHui
  * @Date: 2019/11/15 下午2:15
  */
+@Slf4j
 @Controller
 @RequestMapping("/photo")
 public class PhotoController {
@@ -62,22 +63,6 @@ public class PhotoController {
         File dir = new File(fileLocation + "img/" + spaceName);
         dir.mkdirs();
         return ResponseBean.success("创建空间成功");
-    }
-
-    @Cacheable(cacheNames = {"photolist"})
-    @GetMapping("/getPhotoList")
-    @ResponseBody
-    public List<String> getPhotoList(@RequestParam("space") String space, @RequestParam("page") int page) {
-        File file = new File(fileLocation + "img/" + space);
-        File[] files = file.listFiles();
-        List<String> list = new ArrayList<>();
-        for (File f : files) {
-            list.add(f.getName());
-            System.out.println(f.getName());
-        }
-        int start = (page - 1) * 10;
-        int end = list.size() < start ? list.size() - 1 : start + 10;
-        return list.subList(start, end);
     }
 
     @RequestMapping("/upload")

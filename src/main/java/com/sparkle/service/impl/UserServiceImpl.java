@@ -1,9 +1,9 @@
-package com.sparkle.service.Impl;
+package com.sparkle.service.impl;
 
 import com.sparkle.entity.ResponseBean;
 import com.sparkle.mapper.mapper.UserMapper;
 import com.sparkle.service.UserService;
-import com.sparkle.util.EncryptUtils;
+import com.sparkle.util.Aes;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseBean login(String phone, String password, Map<String, Object> userInfo) {
         try {
-            password = EncryptUtils.encode(password);
+            password = Aes.encrypt(password);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseBean.fail(e, "加密失败");
