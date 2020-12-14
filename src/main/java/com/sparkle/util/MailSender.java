@@ -2,10 +2,7 @@ package com.sparkle.util;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
@@ -18,6 +15,9 @@ import java.util.Properties;
 @Slf4j
 public class MailSender {
 
+    /**
+     * 25
+     */
     public static void sendMail(String title, String text, String[] addressList) {
         try {
             Properties prop = new Properties();
@@ -65,4 +65,43 @@ public class MailSender {
         return message;
     }
 
+    /**
+     * ssl 465
+     */
+    public static void sendMailSsl(String title, String content, String[] addressList) {
+        Properties properties = new Properties();
+        properties.setProperty("mail.transport.protocol", "smtp");
+        properties.put("mail.smtp.host", "smtp.163.com");
+        properties.put("mail.debug", "true");
+        properties.put("mail.smtp.socketFactory.port", "465");
+        properties.put("mail.smtp.ssl.checkserveridentity", "true");
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.port", "465");
+        properties.put("mail.smtp.isSSL", "true");
+
+        Authenticator auth = new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("13407547940@163.com", "aptx4869");
+            }
+        };
+        Session session = Session.getDefaultInstance(properties, auth);
+        session.setDebug(true);
+
+        try {
+            for (String address : addressList) {
+                //4、创建邮件
+                Message message = createTextMail(title, content, address, session);
+                //5、发送邮件
+                Transport.send(message);
+            }
+        } catch (MessagingException e) {
+            log.error("Send Mail ERROR:", e);
+        }
+
+    }
+
+    public static void main(String[] args) {
+        sendMailSsl("test", "test", new String[]{"1120965621@qq.com"});
+    }
 }

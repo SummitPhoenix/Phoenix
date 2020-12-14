@@ -85,10 +85,9 @@ public class FileController {
     @PostMapping("/uploadFolder")
     @ResponseBody
     public ResponseBean uploadFileFolder(@RequestParam("space") String space, HttpServletRequest request) {
-        MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
-        //fileFolder为文件夹的name
-        List<MultipartFile> files = params.getFiles("fileFolder");
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        List<MultipartFile> files = multipartRequest.getFiles("fileFolder");
         String spaceLocation = fileLocation + space + "/";
-        return FileUploadUtil.upload(files, spaceLocation);
+        return FileUploadUtil.uploadFolder(files, spaceLocation);
     }
 }

@@ -16,7 +16,7 @@ server:
 
 #fileLocation: E:/file/
 fileLocation: /home/phoenix/file/
-mailList: 1120965621@qq.com,872174823@qq.com
+mailList: 1120965621@qq.com
 
 spring:
   application:
@@ -62,9 +62,10 @@ spring:
     prefix: classpath:/templates/
   #数据源配置
   datasource:
-    url: jdbc:mysql://localhost:3306/sparkle?useAffectedRows=true&useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8
+    url: jdbc:mysql://localhost:3306/phoenix?useAffectedRows=true&useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8&allowPublicKeyRetrieval=true
     username: root
     password: krcmAiter3#H
+    #    password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       auto-commit: true

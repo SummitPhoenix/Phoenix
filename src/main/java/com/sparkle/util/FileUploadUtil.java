@@ -14,14 +14,56 @@ import java.util.List;
 @Slf4j
 public class FileUploadUtil {
 
-    public static ResponseBean upload(List<MultipartFile> files, String photoLocation) {
+    public static boolean upload(MultipartFile multipartFile, String location) {
+        if (multipartFile.isEmpty()) {
+            return false;
+        }
+
+        // 判断存储的文件夹是否存在
+        File file = new File(location);
+        if (!file.exists()) {
+            boolean mkdir = file.mkdirs();
+            if (!mkdir) {
+                return false;
+            }
+        }
+
+        String originalFilename = multipartFile.getOriginalFilename();
+        if (originalFilename == null || !originalFilename.contains("/")) {
+            return false;
+        }
+        String fileName = originalFilename.substring(originalFilename.lastIndexOf('/') + 1);
+
+        try (
+                // 读取文件
+                BufferedInputStream bis = new BufferedInputStream(multipartFile.getInputStream());
+                // 指定存储的路径
+                FileOutputStream fos = new FileOutputStream(location + fileName);
+                BufferedOutputStream bos = new BufferedOutputStream(fos);
+        ) {
+            int len;
+            byte[] buffer = new byte[10240];
+            while ((len = bis.read(buffer)) != -1) {
+                bos.write(buffer, 0, len);
+            }
+
+            // 刷新此缓冲的输出流，保证数据全部都能写出
+            bos.flush();
+            return true;
+        } catch (IOException e) {
+            log.error("fileUpload ERROR:", e);
+            return false;
+        }
+    }
+
+    public static ResponseBean uploadFolder(List<MultipartFile> files, String location) {
 
         BufferedOutputStream bos;
         BufferedInputStream bis;
         FileOutputStream fos;
 
         // 判断存储的文件夹是否存在
-        File file = new File(photoLocation);
+        File file = new File(location);
         if (!file.exists()) {
             file.mkdirs();
         }
@@ -36,7 +78,7 @@ public class FileUploadUtil {
                     // 读取文件
                     bis = new BufferedInputStream(mf.getInputStream());
                     // 指定存储的路径
-                    fos = new FileOutputStream(photoLocation + fileName);
+                    fos = new FileOutputStream(location + fileName);
                     bos = new BufferedOutputStream(fos);
 
                     int len;

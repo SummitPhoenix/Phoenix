@@ -2,6 +2,8 @@ package com.sparkle.job;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.sparkle.mapper.mapper.FundMapper;
+import com.sparkle.util.Decimal;
 import com.sparkle.util.HttpClientUtil;
 import com.sparkle.util.MailSender;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -19,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * @author K1181378
+ * @author Smartisan
  */
 @Slf4j
 @Component
@@ -53,17 +56,28 @@ public class Fund {
 
     private static String market = "";
 
+    @Resource
+    private FundMapper fundMapper;
 
     /**
      * 周一至周五 14:30执行
      */
     @Scheduled(cron = "1 30 14 * * 1,2,3,4,5")
-    private void fundCheckJob() {
+    public void fundCheckJob() {
         //命名线程
         ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("Fund-Analyse-%d").build();
         //初始化线程池
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(5, 10, 200, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(5), namedThreadFactory);
-        for (String fundCode : FUND_LIST) {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(5, 20, 200, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(5), namedThreadFactory);
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+
+        List<Map<String, Object>> fundInfoList = fundMapper.getFundList();
+        List<String> fundList = new ArrayList<>();
+        for (Map<String, Object> fundInfo : fundInfoList) {
+            String fundCode = (String) fundInfo.get("fundCode");
+            fundList.add(fundCode);
+        }
+
+        for (String fundCode : fundList) {
             Task task = new Task(fundCode);
             executor.execute(task);
         }
@@ -74,7 +88,7 @@ public class Fund {
             if (executor.isTerminated()) {
                 //检查提醒并发送
                 if (!"".equals(text)) {
-                    MailSender.sendMail("[Phoenix基金净值提醒]", text, mailList.split(","));
+                    MailSender.sendMail("[Phoenix]盘中净值更新", text, mailList.split(","));
                     text = "";
                 }
                 log.info(market);
@@ -102,8 +116,28 @@ public class Fund {
         //今日实时行情
         url = "http://fundgz.1234567.com.cn/js/" + fundCode + ".js";
         String json = HttpClientUtil.sendRequest(url);
-        Map<String, String> currentMarket = (Map<String, String>) JSON.parse(json);
-        BigDecimal latestWorth = new BigDecimal(currentMarket.get("gsz"));
+        json = json.substring(json.indexOf("{"), json.indexOf("}") + 1);
+        Map<String, Object> currentMarket = (Map<String, Object>) JSON.parse(json);
+        BigDecimal latestWorth = new BigDecimal((String) currentMarket.get("gsz"));
+
+        BigDecimal history5 = (BigDecimal) worthList.get(worthList.size() - 5).get("y");
+        BigDecimal day5 = getRate(latestWorth, history5);
+
+        BigDecimal history10 = (BigDecimal) worthList.get(worthList.size() - 10).get("y");
+        BigDecimal day10 = getRate(latestWorth, history10);
+
+        BigDecimal history20 = (BigDecimal) worthList.get(worthList.size() - 20).get("y");
+        BigDecimal day20 = getRate(latestWorth, history20);
+
+        currentMarket.put("fundCode", fundCode);
+        currentMarket.put("fundName", currentMarket.get("name"));
+        currentMarket.put("rate", currentMarket.get("gszzl"));
+        currentMarket.put("worth", currentMarket.get("gsz"));
+        currentMarket.put("day5", day5);
+        currentMarket.put("day10", day10);
+        currentMarket.put("day20", day20);
+        fundMapper.updateFund(currentMarket);
+
 
         //获取历史数据分析截止时间
         Calendar calendar = Calendar.getInstance();
@@ -165,12 +199,16 @@ public class Fund {
                 lowOrders.add(doubleWorthList.get(i));
             }
         }
-        Collections.sort(lowOrders);
         double lowOrder = 0;
-        for (int i = 0; i < 4; i++) {
+//        Collections.sort(lowOrders);
+//        for (int i = 0; i < 4; i++) {
+//            lowOrder += lowOrders.get(i);
+//        }
+//        lowOrder = lowOrder / 4;
+        for (int i = 0; i < lowOrders.size(); i++) {
             lowOrder += lowOrders.get(i);
         }
-        lowOrder = lowOrder / 4;
+        lowOrder = lowOrder / lowOrders.size();
         return new BigDecimal(String.valueOf(lowOrder));
     }
 
@@ -192,13 +230,13 @@ public class Fund {
     }
 
     /**
-     * 今日涨幅超过4%,最近10个交易日涨幅超过20%推送风险提示
+     * 今日涨幅超过4%,最近20个交易日涨幅超过20%推送风险提示
      */
-    private void increaseWarn(String fundName, String fundCode, List<Map<String, Object>> worthList, Map<String, String> currentMarket) {
-        BigDecimal latestWorth = new BigDecimal(currentMarket.get("gsz"));
-        BigDecimal todayRate = new BigDecimal(currentMarket.get("gszzl"));
+    private void increaseWarn(String fundName, String fundCode, List<Map<String, Object>> worthList, Map<String, Object> currentMarket) {
+        BigDecimal latestWorth = new BigDecimal((String) currentMarket.get("gsz"));
+        BigDecimal todayRate = new BigDecimal((String) currentMarket.get("gszzl"));
 
-        BigDecimal historyWorth = (BigDecimal) worthList.get(worthList.size() - 11).get("y");
+        BigDecimal historyWorth = (BigDecimal) worthList.get(worthList.size() - 20).get("y");
         BigDecimal increaseRate = latestWorth.divide(historyWorth, RoundingMode.HALF_UP);
 
         String info = "";
@@ -208,7 +246,7 @@ public class Fund {
             sendMail = true;
         }
         if (increaseRate.doubleValue() >= 1.2) {
-            info += " 近10个交易日涨幅超过20%";
+            info += " 近20个交易日涨幅超过20%";
             sendMail = true;
         }
         if (sendMail) {
@@ -217,4 +255,29 @@ public class Fund {
         }
     }
 
+    private static BigDecimal getRate(BigDecimal latestWorth, BigDecimal historyWorth) {
+        BigDecimal rate = latestWorth.divide(historyWorth, 4, RoundingMode.HALF_UP);
+        rate = rate.subtract(new BigDecimal("1"));
+        rate = rate.multiply(new BigDecimal("100"));
+        return rate.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    private BigDecimal getMaxDrawDown(List<Map<String, Object>> worthList) {
+        List<Double> doubleWorthList = new ArrayList<>();
+        for (Map<String, Object> worth : worthList) {
+            BigDecimal value = (BigDecimal) worth.get("y");
+            doubleWorthList.add(value.doubleValue());
+        }
+
+        BigDecimal maxDrawDown = BigDecimal.valueOf(0.0);
+        BigDecimal tempMaxValue = BigDecimal.valueOf(0.0);
+        for (double worth : doubleWorthList) {
+            BigDecimal value = BigDecimal.valueOf(worth);
+            tempMaxValue = Decimal.max(tempMaxValue, value);
+            BigDecimal rate = value.divide(tempMaxValue, 3, RoundingMode.HALF_UP).subtract(BigDecimal.valueOf(1.0));
+            maxDrawDown = Decimal.min(maxDrawDown, rate);
+        }
+        maxDrawDown = maxDrawDown.multiply(BigDecimal.valueOf(100.0)).setScale(1, RoundingMode.HALF_UP);
+        return maxDrawDown;
+    }
 }

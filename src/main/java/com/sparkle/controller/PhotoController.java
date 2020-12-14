@@ -80,6 +80,6 @@ public class PhotoController {
         //fileFolder为文件项的name值
         List<MultipartFile> files = params.getFiles("fileFolder");
         String spaceLocation = fileLocation + "img/" + space + "/";
-        return FileUploadUtil.upload(files, spaceLocation);
+        return FileUploadUtil.uploadFolder(files, spaceLocation);
     }
 }

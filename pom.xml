@@ -9,7 +9,7 @@
         <version>2.3.5.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.ay</groupId>
+    <groupId>com.phoenix</groupId>
     <artifactId>phoenix</artifactId>
     <version>1.0</version>
     <name>phoenix</name>
@@ -153,6 +153,28 @@
                     <fork>true</fork>
                 </configuration>
             </plugin>
+            <!--            <plugin>-->
+            <!--                <groupId>org.springframework.boot</groupId>-->
+            <!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+            <!--                <configuration>-->
+            <!--                    <mainClass>com.PhoenixApplication</mainClass>-->
+            <!--                    <layout>ZIP</layout>-->
+            <!--                    <includes>-->
+            <!--                        <include>-->
+            <!--                            &lt;!&ndash; 排除所有Jar &ndash;&gt;-->
+            <!--                            <groupId>nothing</groupId>-->
+            <!--                            <artifactId>nothing</artifactId>-->
+            <!--                        </include>-->
+            <!--                    </includes>-->
+            <!--                </configuration>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <goals>-->
+            <!--                            <goal>repackage</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
         </plugins>
     </build>
 
