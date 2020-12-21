@@ -16,6 +16,6 @@ public interface FundMapper {
     @Select("SELECT fundCode,fundName,rate,worth,day5,day10,day20,updateTime FROM fund")
     List<Map<String, Object>> getFundList();
 
-    @Update("UPDATE fund SET fundName=#{fundName},rate=#{rate},worth=#{worth},day5=#{day5},day10=#{day10},day20=#{day20} WHERE fundCode=#{fundCode}")
+    @Update("UPDATE fund SET fundName=#{fundName},rate=#{rate},worth=#{worth},day5=#{day5},day10=#{day10},day20=#{day20},day60=#{day60},year=#{year},maxDrawDown=#{maxDrawDown} WHERE fundCode=#{fundCode}")
     void updateFund(Map<String, Object> map);
 }

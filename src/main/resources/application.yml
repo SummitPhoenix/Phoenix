@@ -62,7 +62,8 @@ spring:
     prefix: classpath:/templates/
   #数据源配置
   datasource:
-    url: jdbc:mysql://localhost:3306/phoenix?useAffectedRows=true&useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://127.0.0.1:3306/phoenix?useAffectedRows=true&useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8
+    #    &allowPublicKeyRetrieval=true
     username: root
     password: krcmAiter3#H
     #    password: 123456

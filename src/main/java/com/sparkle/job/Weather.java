@@ -6,7 +6,6 @@ import com.sparkle.util.MailSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -15,7 +14,6 @@ import java.util.Map;
  * @author Smartisan
  */
 @Slf4j
-@Component
 public class Weather {
 
     @Value("${mailList}")
