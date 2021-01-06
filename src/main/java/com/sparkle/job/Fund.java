@@ -1,11 +1,10 @@
 package com.sparkle.job;
 
 import com.alibaba.fastjson.JSON;
-import com.sparkle.mapper.mapper.FundMapper;
+import com.sparkle.mapper.FundMapper;
 import com.sparkle.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -23,17 +22,19 @@ import java.util.stream.Collectors;
 public class Fund {
 
     /**
+     * 买入费率
+     */
+    public static final BigDecimal BUY_RATE = BigDecimal.valueOf(0.0015);
+    /**
+     * 卖出费率
+     */
+    public static final BigDecimal SALE_RATE = BigDecimal.valueOf(0.005);
+
+    /**
      * 邮件地址
      */
     @Value("${mailList}")
     private String mailList;
-
-    /**
-     * 基金净值低位提醒
-     */
-    private static String text = "";
-
-    private static String market = "";
 
     @Resource
     private FundMapper fundMapper;
@@ -41,7 +42,7 @@ public class Fund {
     /**
      * 周一至周五 14:30执行
      */
-    @Scheduled(cron = "1 30 14 * * 1,2,3,4,5")
+//    @Scheduled(cron = "1 30 14 * * 1,2,3,4,5")
     public void fundCheckJob() {
         ThreadPoolExecutor executor = ThreadPoolUtil.getThreadPoolExecutor("Fund-Analyse-%d");
 
@@ -58,20 +59,6 @@ public class Fund {
         }
         //关闭线程池
         executor.shutdown();
-
-        while (true) {
-            if (executor.isTerminated()) {
-                //检查提醒并发送
-                if (!"".equals(text)) {
-                    MailSender.sendMail("[基金收益提醒]", text, mailList.split(","));
-                    text = "";
-                }
-                log.info(market);
-                market = "";
-                break;
-            }
-        }
-
     }
 
     /**
@@ -128,12 +115,12 @@ public class Fund {
         info += "回撤: " + maxDrawDown.doubleValue() + "%<br>\r\n";
         info += "最大收益: " + maxProfit + "<br>\r\n";
         log.info(info.replace("<br>", ""));
-        market += info;
 
         //判断低位标志
         BigDecimal latestWorth = new BigDecimal((String) currentMarket.get("gsz"));
         if (latestWorth.doubleValue() <= min.doubleValue()) {
-            text += fundName + "(" + fundCode + ")净值处于过去" + month + "个月中最低位" + info;
+            String text = fundName + "(" + fundCode + ")净值处于过去" + month + "个月中最低位" + info;
+            MailSender.sendMail("[基金收益提醒]", text, mailList.split(","));
         }
         //风险预警
         increaseWarn(fundName, fundCode, worthList, currentMarket);
@@ -237,7 +224,7 @@ public class Fund {
         }
         if (sendMail) {
             info = fundName + "[" + fundCode + "]" + info;
-            MailSender.sendMail(info, info, mailList.split(","));
+            MailSender.sendMail(info, "", mailList.split(","));
         }
     }
 
@@ -295,7 +282,8 @@ public class Fund {
         BigDecimal history60 = (BigDecimal) worthList.get(worthList.size() - 60).get("y");
         BigDecimal day60 = Fund.getRate(latestWorth, history60);
 
-        BigDecimal history240 = (BigDecimal) worthList.get(worthList.size() - 240).get("y");
+        int yearPoint = worthList.size() > 240 ? worthList.size() - 240 : 0;
+        BigDecimal history240 = (BigDecimal) worthList.get(yearPoint).get("y");
         BigDecimal year = Fund.getRate(latestWorth, history240);
 
         //获取历史数据分析截止时间
@@ -308,11 +296,14 @@ public class Fund {
 
         BigDecimal maxDrawDown = getMaxDrawDown(worthList);
 
+        //实时净值
+        BigDecimal worth = new BigDecimal((String) currentMarket.get("gsz")).setScale(2, RoundingMode.HALF_UP);
+
         Map<String, Object> fundInfo = new HashMap<>();
         fundInfo.put("fundName", currentMarket.get("name"));
         fundInfo.put("fundCode", currentMarket.get("fundcode"));
         fundInfo.put("rate", currentMarket.get("gszzl"));
-        fundInfo.put("worth", currentMarket.get("gsz"));
+        fundInfo.put("worth", worth);
         fundInfo.put("day5", day5);
         fundInfo.put("day10", day10);
         fundInfo.put("day20", day20);

@@ -1,6 +1,6 @@
 package com.sparkle.controller;
 
-import com.sparkle.entity.ResponseBean;
+import com.sparkle.entity.Response;
 import com.sparkle.util.FileUploadUtil;
 import com.sparkle.util.PageUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +44,7 @@ public class FileController {
 
     @GetMapping("/createSpace")
     @ResponseBody
-    public ResponseBean createSpace(@RequestParam("spaceName") String spaceName) {
+    public Response createSpace(@RequestParam("spaceName") String spaceName) {
         File file = new File(fileLocation);
         File[] files = file.listFiles();
         Set<String> set = new HashSet<>();
@@ -54,13 +54,13 @@ public class FileController {
             }
         }
         if (set.contains(spaceName)) {
-            return ResponseBean.fail("空间名已被使用");
+            return Response.fail("空间名已被使用");
         }
         File dir = new File(fileLocation + spaceName);
         if (!dir.mkdirs()) {
-            return ResponseBean.fail("创建空间文件夹失败");
+            return Response.fail("创建空间文件夹失败");
         }
-        return ResponseBean.success("创建空间成功");
+        return Response.success("创建空间成功");
     }
 
     @GetMapping("/space/{type}/{space}/{page}")
@@ -84,7 +84,7 @@ public class FileController {
      */
     @PostMapping("/uploadFolder")
     @ResponseBody
-    public ResponseBean uploadFileFolder(@RequestParam("space") String space, HttpServletRequest request) {
+    public Response uploadFileFolder(@RequestParam("space") String space, HttpServletRequest request) {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         List<MultipartFile> files = multipartRequest.getFiles("fileFolder");
         String spaceLocation = fileLocation + space + "/";

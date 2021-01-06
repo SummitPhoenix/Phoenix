@@ -107,7 +107,7 @@ mybatis:
   #实体类所做包
   type-aliases-package: com.ay.demo.entity
   #mapper.xml所在位置
-  mapper-locations: classpath:com.sparkle.mapper/*.xml
+  mapper-locations: classpath:com.sparkle.mapper.xml/*.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     call-setters-on-nulls: true

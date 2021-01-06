@@ -8,6 +8,8 @@ import java.math.BigDecimal;
  * 3.证券交易经手费:0.00487%双向收取
  * 4.过户费:按成交金额的0.02‰
  * 5.券商交易佣金:按成交金额的0.013%
+ *
+ * @author Smartisan
  */
 public class CalculateUtil {
 
@@ -18,12 +20,18 @@ public class CalculateUtil {
     private static final double administrativeFee = 0.00002;
     private static final double brokerage = 0.0000487;
 
+    /**
+     * 买入费
+     */
     public static double buyServiceCharge(double money) {
         double percent = add(administrativeFee, brokerage);
         System.out.println("buy percent:" + percent * 100);
         return Decimal.multiply(money, percent);
     }
 
+    /**
+     * 卖出费
+     */
     public static double sellServiceCharge(double money) {
         double percent = add(stampTax, transferFee);
         percent = add(percent, brokerCommissions);
@@ -34,9 +42,8 @@ public class CalculateUtil {
     }
 
     public static double add(double num1, double num2) {
-        BigDecimal decimal1 = new BigDecimal(String.valueOf(num1));
-        BigDecimal decimal2 = new BigDecimal(String.valueOf(num2));
-        BigDecimal result = decimal1.add(decimal2);
-        return result.doubleValue();
+        BigDecimal decimal1 = BigDecimal.valueOf(num1);
+        BigDecimal decimal2 = BigDecimal.valueOf(num2);
+        return decimal1.add(decimal2).doubleValue();
     }
 }

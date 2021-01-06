@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Cache-Control" content="max-age=7200"/>
+    <meta charset="UTF-8"/>
+    <link rel="shortcut icon" href="http://www.localhost:8080/favicon.ico"/>
+    <title>Fund</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <link href="static/css/common.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div id="info">
+
+</div>
+<form>
+    <span>基金代码</span><input type="text" name="fundCode" id="fundCode"/></br>
+    <span>买入</span><input type="text" name="money" id="money"/>
+</form>
+<input type="button" value="买入" onclick="buy()">
+</body>
+<script type="text/javascript">
+    function buy() {
+        $.ajax({
+            url: "buy",
+            dataType: "json",
+            data: {'fundCode': $("#fundCode").val(), 'money': $("#money").val()},
+            type: "POST",
+            success: function (data) {
+                console.log(data);
+                if (data.code === 'OK') {
+                    $('#info').val(data);
+                } else {
+                    alert(data.msg);
+                }
+            }
+        });
+    }
+</script>
+</html>

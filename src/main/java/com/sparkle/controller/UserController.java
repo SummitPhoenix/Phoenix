@@ -1,8 +1,8 @@
 package com.sparkle.controller;
 
-import com.sparkle.entity.ResponseBean;
+import com.sparkle.entity.Response;
 import com.sparkle.entity.User;
-import com.sparkle.mapper.mapper.UserMapper;
+import com.sparkle.mapper.UserMapper;
 import com.sparkle.service.UserService;
 import com.sparkle.util.JWTUtil;
 import org.springframework.stereotype.Controller;
@@ -29,7 +29,7 @@ public class UserController {
 
     @ResponseBody
     @GetMapping("/login/token")
-    public ResponseBean login(@RequestParam("phone") String phone, @RequestParam("password") String password, HttpServletResponse response) {
+    public Response login(@RequestParam("phone") String phone, @RequestParam("password") String password, HttpServletResponse response) {
         Map<String, Object> userInfo = userMapper.getUserInfo(phone);
         String token = JWTUtil.sign(userInfo);
         Cookie cookie = new Cookie("token", token);
@@ -48,17 +48,17 @@ public class UserController {
 
     @ResponseBody
     @GetMapping("/getUserInfo")
-    public ResponseBean getUserInfo() {
+    public Response getUserInfo() {
         User user = new User("phone", "username", "address");
 
-        return ResponseBean.success(user);
+        return Response.success(user);
     }
 
     @ResponseBody
     @PostMapping("/updateUserInfo")
-    public ResponseBean updateUserInfo(@RequestBody User user, HttpServletRequest request) {
+    public Response updateUserInfo(@RequestBody User user, HttpServletRequest request) {
         System.out.println(user);
-        return ResponseBean.success("");
+        return Response.success("");
     }
 
 }

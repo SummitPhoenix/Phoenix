@@ -1,7 +1,7 @@
 package com.sparkle.util;
 
 
-import com.sparkle.entity.ResponseBean;
+import com.sparkle.entity.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,7 +56,7 @@ public class FileUploadUtil {
         }
     }
 
-    public static ResponseBean uploadFolder(List<MultipartFile> files, String location) {
+    public static Response uploadFolder(List<MultipartFile> files, String location) {
 
         BufferedOutputStream bos;
         BufferedInputStream bis;
@@ -95,10 +95,10 @@ public class FileUploadUtil {
                 }
             }
 
-            return ResponseBean.success("上传成功");
+            return Response.success("上传成功");
         } catch (IOException e) {
             log.error("fileUpload ERROR:", e);
-            return ResponseBean.fail("上传失败");
+            return Response.fail("上传失败");
         }
     }
 

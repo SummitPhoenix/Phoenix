@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sparkle.mapper.mapper.BlogMapper">
+<mapper namespace="com.sparkle.mapper.BlogMapper">
 
     <select id="getUserByName" resultType="com.entity.User">
-        SELECT
-        username,
-        password,
-        phone,
-        email
-        FROM
-        user
+        SELECT username,
+               password,
+               phone,
+               email
+        FROM user
         WHERE
         username = #{username}
     </select>

@@ -1,6 +1,6 @@
 package com.sparkle.controller;
 
-import com.sparkle.entity.ResponseBean;
+import com.sparkle.entity.Response;
 import com.sparkle.util.FileUploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,7 +48,7 @@ public class PhotoController {
 
     @GetMapping("/createSpace")
     @ResponseBody
-    public ResponseBean createSpace(@RequestParam("spaceName") String spaceName) {
+    public Response createSpace(@RequestParam("spaceName") String spaceName) {
         File file = new File(fileLocation + "img");
         File[] files = file.listFiles();
         Set<String> set = new HashSet<>();
@@ -58,11 +58,11 @@ public class PhotoController {
             }
         }
         if (set.contains(spaceName)) {
-            return ResponseBean.fail("空间名已被使用");
+            return Response.fail("空间名已被使用");
         }
         File dir = new File(fileLocation + "img/" + spaceName);
         dir.mkdirs();
-        return ResponseBean.success("创建空间成功");
+        return Response.success("创建空间成功");
     }
 
     @RequestMapping("/upload")
@@ -75,7 +75,7 @@ public class PhotoController {
      */
     @PostMapping("/uploadFolder")
     @ResponseBody
-    public ResponseBean uploadFileFolder(@RequestParam("space") String space, HttpServletRequest request) {
+    public Response uploadFileFolder(@RequestParam("space") String space, HttpServletRequest request) {
         MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
         //fileFolder为文件项的name值
         List<MultipartFile> files = params.getFiles("fileFolder");

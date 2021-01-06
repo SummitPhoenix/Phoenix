@@ -1,4 +1,4 @@
-package com.sparkle.mapper.mapper;
+package com.sparkle.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;

@@ -1,12 +1,12 @@
 package com.sparkle.service;
 
-import com.sparkle.entity.ResponseBean;
+import com.sparkle.entity.Response;
 
 import java.util.Map;
 
 public interface UserService {
 
-    ResponseBean login(String phone, String password, Map<String, Object> userInfo);
+    Response login(String phone, String password, Map<String, Object> userInfo);
 
-    ResponseBean calaulate(double a, double b);
+    Response calaulate(double a, double b);
 }

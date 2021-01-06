@@ -1,7 +1,7 @@
 package com.sparkle.controller;
 
 import com.sparkle.entity.Blog;
-import com.sparkle.mapper.mapper.BlogMapper;
+import com.sparkle.mapper.BlogMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
