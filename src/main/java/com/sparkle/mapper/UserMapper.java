@@ -1,12 +1,10 @@
 package com.sparkle.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.Map;
 
-@Mapper
 public interface UserMapper {
 
     @Select("SELECT username,phone,address,password FROM t_user WHERE phone=#{phone}")

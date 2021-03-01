@@ -63,7 +63,7 @@ spring:
   #数据源配置
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/phoenix?useAffectedRows=true&useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8
-    #    &allowPublicKeyRetrieval=true
+        &allowPublicKeyRetrieval=true
     username: root
     password: krcmAiter3#H
     #    password: 123456
@@ -105,9 +105,9 @@ logging:
 
 mybatis:
   #实体类所做包
-  type-aliases-package: com.ay.demo.entity
+  type-aliases-package: com.sparkle.entity
   #mapper.xml所在位置
-  mapper-locations: classpath:com.sparkle.mapper.xml/*.xml
+  mapper-locations: classpath:com.sparkle.mapper/*/*.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     call-setters-on-nulls: true

@@ -3,25 +3,109 @@
 <head>
     <meta http-equiv="Cache-Control" content="max-age=7200"/>
     <meta charset="UTF-8"/>
-    <link rel="shortcut icon" href="http://www.localhost:8080/favicon.ico"/>
+    <link rel="shortcut icon" href="/phoenix/favicon.ico"/>
     <title>Fund</title>
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-    <link href="static/css/common.css" rel="stylesheet" type="text/css">
+    <link href="/phoenix/static/css/common.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+<div id="trade">
+    <span id="tradingDay" style="size: 16px;color: red">交易中</span>
+</div>
+<span id="time"></span>
 <div id="info">
 
 </div>
-<form>
-    <span>基金代码</span><input type="text" name="fundCode" id="fundCode"/></br>
-    <span>买入</span><input type="text" name="money" id="money"/>
-</form>
-<input type="button" value="买入" onclick="buy()">
+
+<div id="order">
+    <form>
+        <table>
+            <tr>
+                <td>
+                    <span>基金代码: </span>
+                    <input type="text" name="fundCode" id="fundCode"/>
+                    <br>
+                </td>
+                <td>
+                    <span>委托方向: </span>
+                    <select name="direction" id="direction">
+                        <option>买入</option>
+                        <option>卖出</option>
+                    </select>
+                    <br>
+                </td>
+                <td>
+                    <span>金额: </span>
+                    <input type="text" name="money" id="money"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <input type="button" value="提交" onclick="order()">
+</div>
+
 </body>
 <script type="text/javascript">
-    function buy() {
+    let tradingDay;
+
+    function show() {
+        let date = new Date();
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        month = month < 10 ? "0" + month : month;
+        let day = date.getDate();//获取日期
+        day = day < 10 ? "0" + day : day;
+
+        let week = date.getDay();//获取星期
+        week = "日一二三四五六".charAt(week);
+        week = "星期" + week;
+
+        let hour = date.getHours();
+        hour = hour < 10 ? "0" + hour : hour;
+        let minute = date.getMinutes();
+        minute = minute < 10 ? "0" + minute : minute;
+        let second = date.getSeconds();
+        second = second < 10 ? "0" + second : second;
+
+        document.getElementById("time").innerHTML = year + "年" + month + "月" + day + "日 " + week + " " + hour + ":" + minute + ":" + second;
+
+        if (week === "星期六" || week === "星期日") {
+            $("#tradingDay").css("color", "black");
+            $("#tradingDay").html("闭市");
+            return;
+        }
+
+        let dateStr = year + "-" + month + "-" + day + " ";
+        let amStartTime = dateStrToDate(dateStr + "09:30:00");
+        let amEndTime = dateStrToDate(dateStr + "11:30:00");
+        let pmStartTime = dateStrToDate(dateStr + "13:00:00");
+        let pmEndTime = dateStrToDate(dateStr + "15:00:00");
+
+        tradingDay = (amStartTime < date && date < amEndTime) || (pmStartTime < date && date < pmEndTime);
+
+        if (tradingDay) {
+            $("#tradingDay").css("color", "red");
+            $("#tradingDay").html("交易中");
+        } else {
+            $("#tradingDay").css("color", "black");
+            $("#tradingDay").html("闭市");
+        }
+    }
+
+    function dateStrToDate(str) {
+        return new Date(Date.parse(str.replace(/-/g, "/")));
+    }
+
+    $(function () {
+        show();
+        setInterval("show()", 1000);
+    });
+
+    function order() {
+        let direction = $("#direction").val();
+        let url = direction === "买入" ? "buy" : "sale";
         $.ajax({
-            url: "buy",
+            url: url,
             dataType: "json",
             data: {'fundCode': $("#fundCode").val(), 'money': $("#money").val()},
             type: "POST",

@@ -2,7 +2,6 @@ package com.sparkle.mapper;
 
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import java.util.Map;
 /**
  * @author Smartisan
  */
-@Repository
 public interface FundMapper {
 
     @Select("SELECT fundCode,fundName,rate,worth,day5,day10,day20,updateTime FROM fund")
@@ -21,8 +19,7 @@ public interface FundMapper {
 
     void updateFundBatch(Map<String, Object> map);
 
-    @Select("SELECT * FROM position WHERE status != '删除' AND userId = #{userId} AND fundCode = #{fundCode}")
-    List<Map<String, Object>> getPosition(Map<String, Object> map);
+    List<Map<String, Object>> getPosition(String userId, String fundCode, String status);
 
     void insertPosition(Map<String, Object> map);
 

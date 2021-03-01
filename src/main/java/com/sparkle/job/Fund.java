@@ -204,6 +204,8 @@ public class Fund {
 
     /**
      * 今日涨幅超过4%,最近20个交易日涨幅超过20%推送风险提示
+     * 最近10个交易日涨幅超过10%推送买入提醒
+     * 最近5个交易日平均涨幅大于10个交易日平均涨幅超过10%推送买入提醒
      */
     private void increaseWarn(String fundName, String fundCode, List<Map<String, Object>> worthList, Map<String, Object> currentMarket) {
         BigDecimal latestWorth = new BigDecimal((String) currentMarket.get("gsz"));
@@ -243,7 +245,7 @@ public class Fund {
     }
 
     /**
-     * 计算时段最大回撤
+     * 计算时段内最大回撤
      */
     private static BigDecimal getMaxDrawDown(List<Map<String, Object>> worthList) {
         List<Double> doubleWorthList = new ArrayList<>();
@@ -282,7 +284,7 @@ public class Fund {
         BigDecimal history60 = (BigDecimal) worthList.get(worthList.size() - 60).get("y");
         BigDecimal day60 = Fund.getRate(latestWorth, history60);
 
-        int yearPoint = worthList.size() > 240 ? worthList.size() - 240 : 0;
+        int yearPoint = worthList.size() > 270 ? worthList.size() - 270 : 0;
         BigDecimal history240 = (BigDecimal) worthList.get(yearPoint).get("y");
         BigDecimal year = Fund.getRate(latestWorth, history240);
 

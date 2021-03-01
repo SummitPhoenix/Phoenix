@@ -7,10 +7,7 @@ import com.sparkle.mapper.FundMapper;
 import com.sparkle.util.ThreadPoolUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -41,6 +38,31 @@ public class FundController {
         return "fundSimulate";
     }
 
+    @RequestMapping("/position/{fundCode}")
+    @ResponseBody
+    public Object getPosition(@PathVariable("fundCode") String fundCode) {
+        try {
+            String userId = "";
+            List<Map<String, Object>> positionList = fundMapper.getPosition(userId, fundCode, "买入");
+
+            Map<String, Object> currentMarket = Fund.getCurrentMarket(fundCode);
+            //现价
+            BigDecimal currentPrice = new BigDecimal((String) currentMarket.get("gsz"));
+
+            for (Map<String, Object> order : positionList) {
+                BigDecimal portion = (BigDecimal) order.get("portion");
+                BigDecimal worth = currentPrice.multiply(portion);
+                BigDecimal position = (BigDecimal) order.get("position");
+                BigDecimal rate = Fund.getRate(currentPrice, position);
+            }
+
+        } catch (Exception e) {
+            log.error("查询失败: ", e);
+            return Response.fail(e, "查询失败");
+        }
+        return Response.success("");
+    }
+
     @RequestMapping("/buy")
     @ResponseBody
     public Object buy(@RequestParam Map<String, Object> param) {
@@ -58,16 +80,16 @@ public class FundController {
             BigDecimal serviceCharge = money.multiply(Fund.BUY_RATE).setScale(4, RoundingMode.HALF_UP);
             BigDecimal rate = BigDecimal.valueOf(100).multiply(Fund.BUY_RATE);
             rate = BigDecimal.valueOf(0).subtract(rate);
-            money = money.subtract(serviceCharge);
+            BigDecimal worth = money.subtract(serviceCharge);
             //份额
-            BigDecimal portion = money.divide(position, 4, RoundingMode.HALF_UP);
+            BigDecimal portion = worth.divide(position, 4, RoundingMode.HALF_UP);
             String id = UUID.randomUUID().toString().replace("-", "");
 
             param.put("id", id);
             param.put("userId", "phoenix");
             param.put("fundName", fundName);
             param.put("position", position);
-            param.put("worth", position);
+            param.put("worth", worth);
             param.put("serviceCharge", serviceCharge);
             param.put("money", money);
             param.put("rate", rate);
@@ -101,7 +123,7 @@ public class FundController {
             BigDecimal rate = BigDecimal.valueOf(100).multiply(Fund.BUY_RATE);
             rate = BigDecimal.valueOf(0).subtract(rate);
             money = money.subtract(serviceCharge);
-            //份额
+
             String id = UUID.randomUUID().toString().replace("-", "");
 
             param.put("id", id);
