@@ -135,7 +135,7 @@ public class Fund {
             return historyData;
         }
         String url = "http://fund.eastmoney.com/pingzhongdata/" + fundCode + ".js";
-        String js = HttpClientUtil.sendRequest(url);
+        String js = HttpClientUtil.sendRequest(url, null);
         String dataNetWorthTrend = js.substring(js.indexOf("[{"), js.indexOf("}];") + 2);
         historyData = (List<Map<String, Object>>) JSON.parse(dataNetWorthTrend);
         DataCache.CACHE.put(fundCode, historyData);
@@ -147,7 +147,7 @@ public class Fund {
      */
     public static Map<String, Object> getCurrentMarket(String fundCode) {
         String url = "http://fundgz.1234567.com.cn/js/" + fundCode + ".js";
-        String json = HttpClientUtil.sendRequest(url);
+        String json = HttpClientUtil.sendRequest(url, null);
         json = json.substring(json.indexOf("{"), json.indexOf("}") + 1);
         return (Map<String, Object>) JSON.parse(json);
     }

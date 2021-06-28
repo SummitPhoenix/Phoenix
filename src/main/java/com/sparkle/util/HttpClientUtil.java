@@ -9,6 +9,7 @@ import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
@@ -20,14 +21,16 @@ public class HttpClientUtil {
     /**
      * HTTPClient爬虫
      */
-    public static String sendRequest(String url) {
+    public static String sendRequest(String url, String cookie) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
         //2.创建get请求，相当于在浏览器地址栏输入 网址
         HttpGet request = new HttpGet(url);
         //设置请求头，将爬虫伪装成浏览器
-        request.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36");
-
+        request.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36");
+        if (!StringUtils.isEmpty(cookie)) {
+            request.setHeader("cookie", cookie);
+        }
         try {
             //3.执行get请求，相当于在输入地址栏后敲回车键
             response = httpClient.execute(request);

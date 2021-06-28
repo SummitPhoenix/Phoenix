@@ -32,7 +32,7 @@ public class Weather {
         String city = "南京";
         url += "?appid=" + appid + "&appsecret=" + appsecret + "&version=" + version + "&cityid=" + cityid + "&city=" + city;
 
-        String json = HttpClientUtil.sendRequest(url);
+        String json = HttpClientUtil.sendRequest(url, null);
 
         Map<String, Object> weatherInfo = (Map<String, Object>) JSON.parse(json);
         for (Map.Entry<String, Object> entry : weatherInfo.entrySet()) {

@@ -2,14 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sparkle.mapper.BlogMapper">
 
-    <select id="getUserByName" resultType="com.entity.User">
+    <select id="getUserByName" resultType="com.sparkle.entity.User">
         SELECT username,
                password,
                phone,
                email
         FROM user
-        WHERE
-        username = #{username}
+        WHERE username = #{username}
     </select>
 
     <insert id="insertBlog">

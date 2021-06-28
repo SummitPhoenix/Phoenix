@@ -26,7 +26,7 @@ public class TradingController {
     @ResponseBody
     public Object currentPrice(@PathVariable("stockCode") String stockCode) {
         String url = "http://push2.eastmoney.com/api/qt/stock/details/get?ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1,f2,f3,f4&fields2=f51,f52,f53,f54,f55&pos=-11&secid=0." + stockCode;
-        String json = HttpClientUtil.sendRequest(url);
+        String json = HttpClientUtil.sendRequest(url, null);
         Map<String, Object> market = (Map<String, Object>) JSON.parse(json);
         Map<String, Object> data = (Map<String, Object>) market.get("data");
         List<String> details = (List<String>) data.get("details");

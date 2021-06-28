@@ -3,15 +3,15 @@
 <mapper namespace="com.sparkle.mapper.FundMapper">
 
     <insert id="insertPosition">
-        INSERT INTO position(id, userId, fundCode, fundName, rate, money, serviceCharge, position, worth, portion,
-                             STATUS)
+        INSERT INTO `position`(id, userId, fundCode, fundName, rate, money, serviceCharge, position, worth, portion,
+                               STATUS)
         VALUES (#{id}, #{userId}, #{fundCode}, #{fundName}, #{rate}, #{money}, #{serviceCharge}, #{position}, #{worth},
                 #{portion}, '买入')
     </insert>
 
     <update id="updatePosition" parameterType="map">
         UPDATE
-            position( id, userId, fundCode, fundName, rate, money, serviceCharge, position, worth, portion, STATUS )
+            `position`( id, userId, fundCode, fundName, rate, money, serviceCharge, position, worth, portion, STATUS )
         VALUES
             (
             #{id}, #{userId}, #{fundCode}, #{fundName}, #{rate}, #{money}, #{serviceCharge}, #{position}, #{worth}, #{portion}, '买入'
@@ -32,7 +32,7 @@
         portion,
         STATUS
         FROM
-        position
+        `position`
         WHERE
         STATUS != '删除'
         AND
