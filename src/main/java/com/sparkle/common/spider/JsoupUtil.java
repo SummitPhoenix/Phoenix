@@ -18,7 +18,6 @@ import java.io.IOException;
 
 /**
  * @Description
- * @Author: XuanXiangHui
  * @Date: 2020/1/8 下午5:11
  */
 public class JsoupUtil {
