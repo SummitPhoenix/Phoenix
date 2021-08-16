@@ -6,8 +6,9 @@ import com.sparkle.util.Decimal;
 import com.sparkle.util.HttpClientUtil;
 import com.sparkle.util.ThreadPoolUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,13 +28,25 @@ import java.util.stream.Collectors;
 @Slf4j
 public class Stock {
 
+    @Value("${mailList}")
+    private String mailList;
+
     @Resource
     private StockMapper stockMapper;
 
+    /**
+     * 证券数据
+     */
     private static List<Map<String, Object>> stockList;
 
+    /**
+     * 代码:名称 字典
+     */
     private static Map<String, String> stockNames = new HashMap<>();
 
+    /**
+     * 均线提醒
+     */
     private static List<String> stockInfoList;
 
     @GetMapping("/analyse")
@@ -42,6 +55,10 @@ public class Stock {
         return stockCheckJob();
     }
 
+    /**
+     * 周一至周五 10:00 14:00执行
+     */
+    @Scheduled(cron = "* 40 9,10,14 * * 1,2,3,4,5")
     public String stockCheckJob() {
         stockInfoList = new ArrayList<>();
         stockList = stockMapper.getStockList();
@@ -59,6 +76,28 @@ public class Stock {
         while (true) {
             if (executor.isTerminated()) {
                 log.info("stockInfo:{}", stockInfoList);
+
+                //邮件
+//                if(!stockInfoList.isEmpty()){
+//                    StringBuilder text = new StringBuilder();
+//                    for(String stockInfo : stockInfoList){
+//                        text.append(stockInfo);
+//                    }
+//                    String title = "[均线提醒]";
+//                    MailSender.sendMail(title, text.toString(), mailList.split(","));
+//                }
+                //微信push plus
+                if (!stockInfoList.isEmpty()) {
+                    StringBuilder text = new StringBuilder();
+                    for (String stockInfo : stockInfoList) {
+                        text.append(stockInfo);
+                    }
+                    String url = "http://pushplus.hxtrip.com/send?token=cace7b6e38db41e5acb7997f4efe6122&title=均线提醒&content=&template=" + text.toString();
+                    String response = HttpClientUtil.sendRequest(url, null);
+                    log.info("push plus response:{}", response);
+                }
+
+
                 return JSON.toJSONString(stockInfoList);
             }
         }
@@ -83,10 +122,10 @@ public class Stock {
 
     private void analyse(String stockCode) {
         String info = average(stockCode);
-        if (StringUtils.isEmpty(info)) {
+        if (info == null) {
             return;
         }
-        stockInfoList.add(stockNames.get(stockCode) + ":" + info);
+        stockInfoList.add(stockNames.get(stockCode) + ":" + info + "<br>");
     }
 
     /**
@@ -123,15 +162,21 @@ public class Stock {
     }
 
 
+    /**
+     * 计算均线提醒
+     */
     private String average(String stockCode) {
         String url = "https://stock.xueqiu.com/v5/stock/chart/kline.json?symbol=" + stockCode + "&begin=" + System.currentTimeMillis() + "&period=day&type=before&count=-60&indicator=kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance";
-        String cookie = "device_id=a00e9a2529b25d6e61e5b52e2a621d8a; s=c211c9yqtp; bid=7ec429ae08934049eea4ec246a00f523_kmeu52gu; Hm_lvt_fe218c11eab60b6ab1b6f84fb38bcc4a=1616074929; xq_is_login=1; u=5097026868; xq_a_token=0ef79ddacfdc4eeb844875158178ac86623802bb; xqat=0ef79ddacfdc4eeb844875158178ac86623802bb; xq_id_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1aWQiOjUwOTcwMjY4NjgsImlzcyI6InVjIiwiZXhwIjoxNjI3MDkwMTc5LCJjdG0iOjE2MjQ0OTgxNzkxNDUsImNpZCI6ImQ5ZDBuNEFadXAifQ.N-51ulOnnqktnQ9guEHHsuKlbOkExwdQ6jDvz8b5f2FFkJqdpNrfQc7pbNi8Hx1EEqju7CvjBbx_KbjTszhps_y28G3i0o4h5myl87Kn-LtgUANjjF9X0_EWcAv2xB_fF9hvIFQctWdTeDZPvioL7JfpxipEAKqbzu65IX-PYZO3I2n-jafIYRnLQRAn90rnEiAtY5PXqb3vnocSgyZMB5eLi4uLV2FDd4cnzi5ac1Gg4PKx1Bg1V-VNlMpfIuoLKoTzlkc3QvEF6YB7o0yKHrPgS72fyhPCbvMbmAPzpzi-jWmP5XmhKgDWORKnfmwLM0kL7TF-q2ixhoHusUBATg; xq_r_token=745b4ea3375e2b525aba797868afbde67d8c9c9a; Hm_lvt_1db88642e346389874251b5a1eded6e3=1624702372,1624719722,1624804932,1624842682; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1624847711";
+        String cookie = "xq_a_token=0de231800ecb3f75e824dc0a23866218ead61a8e; xqat=0de231800ecb3f75e824dc0a23866218ead61a8e; xq_r_token=55c21eea0ba3549a92f908d2f8ee69f0a03d067b; xq_id_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1aWQiOi0xLCJpc3MiOiJ1YyIsImV4cCI6MTYzMDY5MDEwMSwiY3RtIjoxNjI4OTE0Nzg5NTczLCJjaWQiOiJkOWQwbjRBWnVwIn0.RN3bMg19epKVNIVCJpnYtIQXYpp6sJI5Kfe_yFe7_7jbZ6qbvNsJALsdLGj1UcuNVuc3KffCGkx58uFmqhhfVv81oLlsbU8Xs5tK3T40Jm67bQTOhMC2DiPUs_yN-YQNQ1XGVK1cTj1dysvgloPZH3fmzApbPyQnbeCqfLKJA_l3_pvFQUWVa6o1WXMECPAlEN-5DQBtUXZWp97Eh6pSVgoLqpdyiNIN11X2gomOXk1AC3bVMcNcRIPCLD0bYfO3VX86JpzX-Gw_LeuZw9v1d205y7M_tRdRtcfgKjEmnF6t5tUhmwcwaaMUgWvbPtiFmsVqHQlgdQDAe1dd4QZdFA; u=371628914827824; device_id=78ef428047050ccb79132e4473ffc998; Hm_lvt_1db88642e346389874251b5a1eded6e3=1628914829; is_overseas=0; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1628914942";
         String response = HttpClientUtil.sendRequest(url, cookie);
+        System.out.println(response);
         Map<String, Object> json = (Map<String, Object>) JSON.parse(response);
         Map<String, Object> data = (Map<String, Object>) json.get("data");
         List<List<BigDecimal>> item = (List<List<BigDecimal>>) data.get("item");
         //实时价格
         BigDecimal currentPrice = item.get(item.size() - 1).get(5);
+        //涨跌幅
+        BigDecimal percent = item.get(item.size() - 1).get(7);
 
         //收盘价行情数据
         List<BigDecimal> closePrices = item.stream().map(list -> list.get(5)).collect(Collectors.toList());
@@ -168,15 +213,15 @@ public class Stock {
         }
         ma60 = ma60.divide(BigDecimal.valueOf(60), 3, RoundingMode.HALF_UP);
 
-        String position = "";
-        Map<BigDecimal, String> compareMap = new LinkedHashMap<>();
-        compareMap.put(currentPrice, "当前");
-        compareMap.put(ma5, "5日");
-        compareMap.put(ma10, "10日");
-        compareMap.put(ma20, "20日");
-        compareMap.put(ma30, "30日");
-        compareMap.put(ma60, "60日");
-        compareMap = compareMap.entrySet().stream().sorted(Map.Entry.comparingByKey(Comparator.reverseOrder())).collect(Collectors.toMap(
+        //均线位置排序
+        Map<String, BigDecimal> compareMap = new LinkedHashMap<>();
+        compareMap.put("当前", currentPrice);
+        compareMap.put("5日", ma5);
+        compareMap.put("10日", ma10);
+        compareMap.put("20日", ma20);
+        compareMap.put("30日", ma30);
+        compareMap.put("60日", ma60);
+        compareMap = compareMap.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).collect(Collectors.toMap(
                 Map.Entry::getKey,
                 Map.Entry::getValue,
                 (x, y) -> {
@@ -185,24 +230,21 @@ public class Stock {
                 LinkedHashMap::new
         ));
         StringBuilder stringBuilder = new StringBuilder();
-        for (String value : compareMap.values()) {
-            stringBuilder.append(value);
+        for (String key : compareMap.keySet()) {
+            stringBuilder.append(key);
             stringBuilder.append(",");
         }
-        position = stringBuilder.toString();
+        String position = stringBuilder.toString();
         position = position.substring(0, position.length() - 1);
 
         Optional<Map<String, Object>> oldStockInfo = stockList.stream().filter(stock -> stockCode.equals(stock.get("stockCode"))).findFirst();
         String oldPosition = (String) oldStockInfo.get().get("position");
+        int changed = position.indexOf("当前") == oldPosition.indexOf("当前") ? 0 : 1;
 
-        int changed = 0;
-        if (!position.equals(oldPosition)) {
-            changed = 1;
-        }
-
+        //更新数据
         Map<String, Object> stockInfo = new HashMap<>();
         stockInfo.put("stockCode", stockCode);
-        stockInfo.put("rate", "0");
+        stockInfo.put("rate", percent);
         stockInfo.put("price", currentPrice);
         stockInfo.put("ma5", ma5);
         stockInfo.put("ma10", ma10);
@@ -213,23 +255,29 @@ public class Stock {
         stockInfo.put("changed", changed);
         stockMapper.updateStock(stockInfo);
 
+        //均线位置未改变不提醒
         if (changed == 0) {
-            return "";
+            return null;
         }
 
-        if (Decimal.max(currentPrice, ma5).equals(currentPrice)) {
-            return "5日均线上轨";
-        } else if (Decimal.max(currentPrice, ma10).equals(currentPrice)) {
-            return "5日均线下轨";
-        } else if (Decimal.max(currentPrice, ma20).equals(currentPrice)) {
-            return "10日均线下轨";
-        } else if (Decimal.max(currentPrice, ma30).equals(currentPrice)) {
-            return "20日均线下轨";
-        } else if (Decimal.max(currentPrice, ma60).equals(currentPrice)) {
-            return "30日均线下轨";
-        } else {
-            return "60日均线下轨";
+        //判断当前均线位置
+        String[] averageLines = oldPosition.split(",");
+        int offset = 0;
+        for (int i = 0; i < averageLines.length; i++) {
+            if ("当前".equals(averageLines[i])) {
+                offset = i;
+            }
         }
+
+        //生成均线位置变化提醒
+        String[] currentAverageLines = position.split(",");
+        String info;
+        if (percent.doubleValue() <= 0) {
+            info = "跌破" + currentAverageLines[offset] + "均线";
+        } else {
+            info = "向上突破" + currentAverageLines[offset] + "均线";
+        }
+        return info;
     }
 
 }
