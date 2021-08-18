@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.sparkle.mapper.StockMapper;
 import com.sparkle.util.Decimal;
 import com.sparkle.util.HttpClientUtil;
+import com.sparkle.util.MailSender;
 import com.sparkle.util.ThreadPoolUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -78,24 +79,24 @@ public class Stock {
                 log.info("stockInfo:{}", stockInfoList);
 
                 //邮件
-//                if(!stockInfoList.isEmpty()){
-//                    StringBuilder text = new StringBuilder();
-//                    for(String stockInfo : stockInfoList){
-//                        text.append(stockInfo);
-//                    }
-//                    String title = "[均线提醒]";
-//                    MailSender.sendMail(title, text.toString(), mailList.split(","));
-//                }
-                //微信push plus
                 if (!stockInfoList.isEmpty()) {
                     StringBuilder text = new StringBuilder();
                     for (String stockInfo : stockInfoList) {
                         text.append(stockInfo);
                     }
-                    String url = "http://pushplus.hxtrip.com/send?token=cace7b6e38db41e5acb7997f4efe6122&title=均线提醒&content=&template=" + text.toString();
-                    String response = HttpClientUtil.sendRequest(url, null);
-                    log.info("push plus response:{}", response);
+                    String title = "[均线提醒]";
+                    MailSender.sendMail(title, text.toString(), mailList.split(","));
                 }
+                //微信push plus
+//                if (!stockInfoList.isEmpty()) {
+//                    StringBuilder text = new StringBuilder();
+//                    for (String stockInfo : stockInfoList) {
+//                        text.append(stockInfo);
+//                    }
+//                    String url = "http://pushplus.hxtrip.com/send?token=cace7b6e38db41e5acb7997f4efe6122&title=均线提醒&content=&template=" + text.toString();
+//                    String response = HttpClientUtil.sendRequest(url, null);
+//                    log.info("push plus response:{}", response);
+//                }
 
 
                 return JSON.toJSONString(stockInfoList);
@@ -125,7 +126,7 @@ public class Stock {
         if (info == null) {
             return;
         }
-        stockInfoList.add(stockNames.get(stockCode) + ":" + info + "<br>");
+        stockInfoList.add(stockNames.get(stockCode) + "  " + info + "<br>");
     }
 
     /**
@@ -169,7 +170,9 @@ public class Stock {
         String url = "https://stock.xueqiu.com/v5/stock/chart/kline.json?symbol=" + stockCode + "&begin=" + System.currentTimeMillis() + "&period=day&type=before&count=-60&indicator=kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance";
         String cookie = "xq_a_token=0de231800ecb3f75e824dc0a23866218ead61a8e; xqat=0de231800ecb3f75e824dc0a23866218ead61a8e; xq_r_token=55c21eea0ba3549a92f908d2f8ee69f0a03d067b; xq_id_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1aWQiOi0xLCJpc3MiOiJ1YyIsImV4cCI6MTYzMDY5MDEwMSwiY3RtIjoxNjI4OTE0Nzg5NTczLCJjaWQiOiJkOWQwbjRBWnVwIn0.RN3bMg19epKVNIVCJpnYtIQXYpp6sJI5Kfe_yFe7_7jbZ6qbvNsJALsdLGj1UcuNVuc3KffCGkx58uFmqhhfVv81oLlsbU8Xs5tK3T40Jm67bQTOhMC2DiPUs_yN-YQNQ1XGVK1cTj1dysvgloPZH3fmzApbPyQnbeCqfLKJA_l3_pvFQUWVa6o1WXMECPAlEN-5DQBtUXZWp97Eh6pSVgoLqpdyiNIN11X2gomOXk1AC3bVMcNcRIPCLD0bYfO3VX86JpzX-Gw_LeuZw9v1d205y7M_tRdRtcfgKjEmnF6t5tUhmwcwaaMUgWvbPtiFmsVqHQlgdQDAe1dd4QZdFA; u=371628914827824; device_id=78ef428047050ccb79132e4473ffc998; Hm_lvt_1db88642e346389874251b5a1eded6e3=1628914829; is_overseas=0; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1628914942";
         String response = HttpClientUtil.sendRequest(url, cookie);
-        System.out.println(response);
+        if ("异常".equals(response)) {
+            return null;
+        }
         Map<String, Object> json = (Map<String, Object>) JSON.parse(response);
         Map<String, Object> data = (Map<String, Object>) json.get("data");
         List<List<BigDecimal>> item = (List<List<BigDecimal>>) data.get("item");
@@ -273,9 +276,9 @@ public class Stock {
         String[] currentAverageLines = position.split(",");
         String info;
         if (percent.doubleValue() <= 0) {
-            info = "跌破" + currentAverageLines[offset] + "均线";
+            info = "下跌 " + currentAverageLines[offset];
         } else {
-            info = "向上突破" + currentAverageLines[offset] + "均线";
+            info = "上涨 " + currentAverageLines[offset];
         }
         return info;
     }

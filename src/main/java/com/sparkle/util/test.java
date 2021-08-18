@@ -1,9 +1,6 @@
 package com.sparkle.util;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @Description
@@ -12,25 +9,12 @@ import java.util.Date;
  */
 public class test {
 
-    public static void main(String[] args) {
-        File file = new File("");
-        Calendar calendar = Calendar.getInstance();
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime()));
-        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 60);
-        Date deadline = calendar.getTime();
-        String createdDate = new SimpleDateFormat("yyyy-MM-dd").format(deadline);
-        System.out.println(createdDate);
-    }
-
-
-    public static int hashCode(char[] value, int hash) {
-        int h = hash;
-        if (h == 0 && value.length > 0) {
-            for (char c : value) {
-                h = 31 * h + c;
-            }
-        }
-        return h;
+    public static void main(String[] args) throws UnsupportedEncodingException {
+        String url = "http://pushplus.hxtrip.com/send?token=cace7b6e38db41e5acb7997f4efe6122&title=均线提醒&content=1&template=test";
+//        url = URLEncoder.encode(url, StandardCharsets.ISO_8859_1.name());
+        System.out.println(url);
+        String response = HttpClientUtil.sendRequest(url, null);
+        System.out.println(response);
     }
 
     /**
