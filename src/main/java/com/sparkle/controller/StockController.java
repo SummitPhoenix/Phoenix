@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -21,6 +23,16 @@ import java.util.UUID;
 @Controller
 @Slf4j
 public class StockController {
+
+    @RequestMapping("/vue")
+    @ResponseBody
+    public Object vue(@RequestParam Map<String, Object> param) {
+        String value = (String) param.get("value");
+        List<String> data = new ArrayList<>();
+        data.add(value);
+        data.add("test");
+        return data;
+    }
 
     @RequestMapping("/buy")
     @ResponseBody

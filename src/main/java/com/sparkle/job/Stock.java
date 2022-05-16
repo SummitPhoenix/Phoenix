@@ -57,7 +57,7 @@ public class Stock {
     }
 
     /**
-     * 周一至周五 10:00 14:00执行
+     * 周一至周五 9:40 10:40 14:40执行
      */
     @Scheduled(cron = "* 40 9,10,14 * * 1,2,3,4,5")
     public String stockCheckJob() {
@@ -87,18 +87,6 @@ public class Stock {
                     String title = "[均线提醒]";
                     MailSender.sendMail(title, text.toString(), mailList.split(","));
                 }
-                //微信push plus
-//                if (!stockInfoList.isEmpty()) {
-//                    StringBuilder text = new StringBuilder();
-//                    for (String stockInfo : stockInfoList) {
-//                        text.append(stockInfo);
-//                    }
-//                    String url = "http://pushplus.hxtrip.com/send?token=cace7b6e38db41e5acb7997f4efe6122&title=均线提醒&content=&template=" + text.toString();
-//                    String response = HttpClientUtil.sendRequest(url, null);
-//                    log.info("push plus response:{}", response);
-//                }
-
-
                 return JSON.toJSONString(stockInfoList);
             }
         }
@@ -168,7 +156,7 @@ public class Stock {
      */
     private String average(String stockCode) {
         String url = "https://stock.xueqiu.com/v5/stock/chart/kline.json?symbol=" + stockCode + "&begin=" + System.currentTimeMillis() + "&period=day&type=before&count=-60&indicator=kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance";
-        String cookie = "device_id=78ef428047050ccb79132e4473ffc998; s=ci12q28n9b; bid=7ec429ae08934049eea4ec246a00f523_ksfhmi3a; Hm_lvt_fe218c11eab60b6ab1b6f84fb38bcc4a=1629251530; xq_is_login=1; u=6768671760; xq_a_token=82b3d484547fbe4e6600e8fa3e9e23f48ad580c3; xqat=82b3d484547fbe4e6600e8fa3e9e23f48ad580c3; xq_id_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1aWQiOjY3Njg2NzE3NjAsImlzcyI6InVjIiwiZXhwIjoxNjM2MTg0OTU1LCJjdG0iOjE2MzM1OTI5NTU1NDcsImNpZCI6ImQ5ZDBuNEFadXAifQ.BGCdWG_-jea5FyiDnyYApsR7VfYg3EXOsW_r0AZ3nNh_I2IAyE1SJHKBFQaUpR5kc5Xkhn0Cenj0rK-XDEndG25T645x9fNmw-IfZ-dlhVekphWTgfdhDoqPf0OYcbHbjuM6gllL6lFLMBnd_zgOTZe5ndsJ0qe1bUldjz5CqgKTeI8Edks8QmgHfgL8s6fAILIlfH0eUlMkfF30fWjgDxaOxgPyCZGqf7ZFOxqPfbYKXeas9k6wfVo-AO_r4yqEym3zMvRfbgYOzlneLuDg1qqb8Zvke-Q9qiNa1GsaqD-yYZdW9p07ImH8DIzzHGg1xqjNiV16wr62V_d5CpRTgA; xq_r_token=c285e264246439b47a4eabf9570f100b7a356013; Hm_lvt_1db88642e346389874251b5a1eded6e3=1633004078,1633592957,1633605427,1633654506; is_overseas=0; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1633681996";
+        String cookie = "device_id=78ef428047050ccb79132e4473ffc998; s=ci12q28n9b; bid=7ec429ae08934049eea4ec246a00f523_ksfhmi3a; Hm_lvt_fe218c11eab60b6ab1b6f84fb38bcc4a=1629251530; xq_is_login=1; u=6768671760; xq_a_token=74eefee904988efe463d3ffe9b6d85a21b27c56f; xqat=74eefee904988efe463d3ffe9b6d85a21b27c56f; xq_id_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1aWQiOjY3Njg2NzE3NjAsImlzcyI6InVjIiwiZXhwIjoxNjQxNTQ3OTM2LCJjdG0iOjE2Mzg5NTU5MzY1MTIsImNpZCI6ImQ5ZDBuNEFadXAifQ.btOjcXznPSC462VOyc5340bZOTYSNA0qI3lU5rr7zXyRVV6DpWi9EISnOI1COl89Ja-wmy0W53St78B3iQC6jPKa4FfSEt8P6xcS1mJjo8GHNkpn-GhzRhAjqsWTgcXguHEhk8yg0F7iGEzU2PBzaP-l1DCty4KI5hQJlr_NcyHUFiW4Q1TQaHO9vCsbJlbY6A3CQ8Erioj7VI8X_iHSIhR3K4GiC3X0SevDiXPksBjPY-URLhCIF4RhTwMIPcPmJbP1RpCTm5z6QbAADZ9udAY8TIXuRl6mhZYA72wCsNAY0zdMdrRUT3tpGnj_T1Xn3_y8OGc49y6Z50XlAuUzGg; xq_r_token=476cc4e3d7731369b2eed7a0e06a1e06ca16bd30; Hm_lvt_1db88642e346389874251b5a1eded6e3=1639061953,1639128707,1639231125,1639364567; is_overseas=0; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1639373914";
         String response = HttpClientUtil.sendRequest(url, cookie);
         if ("异常".equals(response)) {
             return null;
@@ -187,9 +175,7 @@ public class Stock {
 
         //计算均线
         BigDecimal ma5 = BigDecimal.valueOf(0);
-        BigDecimal ma10 = BigDecimal.valueOf(0);
         BigDecimal ma20 = BigDecimal.valueOf(0);
-        BigDecimal ma30 = BigDecimal.valueOf(0);
         BigDecimal ma60 = BigDecimal.valueOf(0);
         for (int i = 0; i < 60; i++) {
             switch (i) {
@@ -197,17 +183,9 @@ public class Stock {
                     ma5 = ma60;
                     ma5 = ma5.divide(BigDecimal.valueOf(5), 3, RoundingMode.HALF_UP);
                     break;
-                case 10:
-                    ma10 = ma60;
-                    ma10 = ma10.divide(BigDecimal.valueOf(10), 3, RoundingMode.HALF_UP);
-                    break;
                 case 20:
                     ma20 = ma60;
                     ma20 = ma20.divide(BigDecimal.valueOf(20), 3, RoundingMode.HALF_UP);
-                    break;
-                case 30:
-                    ma30 = ma60;
-                    ma30 = ma30.divide(BigDecimal.valueOf(30), 3, RoundingMode.HALF_UP);
                     break;
                 default:
                     break;
@@ -220,9 +198,7 @@ public class Stock {
         Map<String, BigDecimal> compareMap = new LinkedHashMap<>();
         compareMap.put("当前", currentPrice);
         compareMap.put("5日", ma5);
-        compareMap.put("10日", ma10);
         compareMap.put("20日", ma20);
-        compareMap.put("30日", ma30);
         compareMap.put("60日", ma60);
         compareMap = compareMap.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).collect(Collectors.toMap(
                 Map.Entry::getKey,
@@ -250,9 +226,7 @@ public class Stock {
         stockInfo.put("rate", percent);
         stockInfo.put("price", currentPrice);
         stockInfo.put("ma5", ma5);
-        stockInfo.put("ma10", ma10);
         stockInfo.put("ma20", ma20);
-        stockInfo.put("ma30", ma30);
         stockInfo.put("ma60", ma60);
         stockInfo.put("position", position);
         stockInfo.put("changed", changed);
