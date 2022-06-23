@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * 东方财富涨停统计接口爬虫筛选
  * http://quote.eastmoney.com/ztb/detail#type=qsgc
  */
-public class StockDailyLimitStatistics {
+public class StockDailyLimitPool {
 
     private static final BigDecimal billion50 = BigDecimal.valueOf(5000000000.0);
     private static final BigDecimal billion70 = BigDecimal.valueOf(7000000000.0);
@@ -23,34 +23,33 @@ public class StockDailyLimitStatistics {
 
     public static void main(String[] args) {
 //        String url = "http://push2ex.eastmoney.com/getTopicQSPool?cb=callbackdata3650283&ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=170&sort=tshare%3Adesc&date=20220601&_=1654066527732";
-        String url = "http://push2ex.eastmoney.com/getTopicQSPool?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=500&sort=tshare%3Adesc&date=" + new SimpleDateFormat("yyyyMMdd").format(new Date());
+        String url = "http://push2ex.eastmoney.com/getTopicZTPool?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=500&sort=tshare%3Adesc&date=" + new SimpleDateFormat("yyyyMMdd").format(new Date());
 
         BigDecimal minTotalMarket = billion100;
-        BigDecimal minRate = BigDecimal.valueOf(5.0);
-        BigDecimal minTurnOver = BigDecimal.valueOf(0.1);
-        BigDecimal maxTurnOver = BigDecimal.valueOf(30.0);
-        analyse(url, minTotalMarket, minRate, minTurnOver, maxTurnOver, 1);
+        BigDecimal minTurnOver = BigDecimal.valueOf(0.5);
+        BigDecimal maxTurnOver = BigDecimal.valueOf(20.0);
+        analyse(url, minTotalMarket, minTurnOver, maxTurnOver, 1);
     }
 
 
     /**
      * @param url              接口地址
      * @param minTotalMarket   最小市值
-     * @param minRate          最低涨幅
      * @param minTurnOver      最低换手
      * @param maxTurnOver      最高换手
      * @param dailyLimitNumber 涨停次数
      */
-    private static void analyse(String url, BigDecimal minTotalMarket, BigDecimal minRate, BigDecimal minTurnOver, BigDecimal maxTurnOver, int dailyLimitNumber) {
+    private static void analyse(String url, BigDecimal minTotalMarket, BigDecimal minTurnOver, BigDecimal maxTurnOver, int dailyLimitNumber) {
         String originData = HttpClientUtil.sendRequest(url, null);
+        System.out.println(originData);
         originData = originData.substring(originData.indexOf("[{"), originData.lastIndexOf("}}"));
+        System.out.println(originData);
         List<Map<String, Object>> data = (List<Map<String, Object>>) JSON.parse(originData);
 
         //筛选市值 涨幅 涨停统计
         data = data.stream().filter(stock ->
                 Decimal.min(minTotalMarket, (BigDecimal) stock.get("tshare")).compareTo(minTotalMarket) == 0 &&
                         Decimal.max((BigDecimal) stock.get("tshare"), billion1000).compareTo(billion1000) == 0 &&
-                        ((BigDecimal) stock.get("zdp")).compareTo(minRate) > 0 &&
                         ((BigDecimal) stock.get("zdp")).compareTo(BigDecimal.valueOf(11.0)) < 0 &&
                         ((BigDecimal) stock.get("hs")).compareTo(minTurnOver) > 0 &&
                         ((BigDecimal) stock.get("hs")).compareTo(maxTurnOver) < 0 &&
