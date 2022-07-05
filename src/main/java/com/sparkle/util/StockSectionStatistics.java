@@ -65,7 +65,8 @@ public class StockSectionStatistics {
         LinkedHashMap<String, BigDecimal> sortedMap = new LinkedHashMap<>();
         for (Map.Entry<String, BigDecimal> mapping : list) {
             //筛选大于1亿的
-            if (Decimal.min(BigDecimal.ONE, mapping.getValue()).compareTo(BigDecimal.ONE) != 0) {
+//            if (Decimal.min(BigDecimal.ONE, mapping.getValue()).compareTo(BigDecimal.ONE) != 0) {
+            if (Decimal.min(BigDecimal.ZERO, mapping.getValue()).compareTo(BigDecimal.ZERO) != 0) {
                 break;
             }
             sortedMap.put(mapping.getKey(), mapping.getValue());

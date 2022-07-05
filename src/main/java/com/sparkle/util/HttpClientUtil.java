@@ -28,7 +28,7 @@ public class HttpClientUtil {
         HttpGet request = new HttpGet(url);
         //设置请求头，将爬虫伪装成浏览器
         request.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36");
-        if (!StringUtils.isEmpty(cookie)) {
+        if (!StringUtils.hasText(cookie)) {
             request.setHeader("cookie", cookie);
         }
         try {

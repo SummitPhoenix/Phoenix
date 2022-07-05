@@ -1,19 +1,15 @@
 package com.sparkle.designmode;
 
 public class Singleton {
-    private volatile static Singleton singleton;
+    private static Singleton instance;
 
     private Singleton() {
     }
 
-    public static Singleton getSingleton() {
-        if (singleton == null) {
-            synchronized (Singleton.class) {
-                if (singleton == null) {
-                    singleton = new Singleton();
-                }
-            }
+    public static synchronized Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
         }
-        return singleton;
+        return instance;
     }
 }
