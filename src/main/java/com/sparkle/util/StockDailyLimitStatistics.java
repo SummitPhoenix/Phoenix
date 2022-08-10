@@ -28,8 +28,8 @@ public class StockDailyLimitStatistics {
         BigDecimal minTotalMarket = billion100;
         BigDecimal minRate = BigDecimal.valueOf(5.0);
         BigDecimal minTurnOver = BigDecimal.valueOf(0.1);
-        BigDecimal maxTurnOver = BigDecimal.valueOf(30.0);
-        analyse(url, minTotalMarket, minRate, minTurnOver, maxTurnOver, 0);
+        BigDecimal maxTurnOver = BigDecimal.valueOf(20.0);
+        analyse(url, minTotalMarket, minRate, minTurnOver, maxTurnOver, 1);
     }
 
 
