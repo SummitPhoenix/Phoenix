@@ -10,13 +10,21 @@ import java.util.concurrent.Executors;
 public class FutureCallableTask {
     public static void main(String[] args) throws Exception {
         ExecutorService executor = Executors.newFixedThreadPool(1);
-        String param = "test,a,b";
+        String param = "test";
         // 定义任务:
-        Callable<String> task = () -> {
-            String result = param.replace(",", "|");
-            return result + "1";
+        Callable<String> taskA = () -> {
+            String result = param + "a";
+            return result;
         };
-        Object result = executor.submit(task).get();
-        System.out.println(result);
+        Callable<String> taskB = () -> {
+            String result = param + "b";
+            return result;
+        };
+        Object resultA = executor.submit(taskA).get();
+        Object resultB = executor.submit(taskB).get();
+
+        System.out.println(resultA);
+        System.out.println(resultB);
+        executor.shutdown();
     }
 }
