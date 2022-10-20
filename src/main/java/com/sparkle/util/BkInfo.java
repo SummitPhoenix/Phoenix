@@ -2,7 +2,6 @@ package com.sparkle.util;
 
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -17,8 +16,8 @@ import java.awt.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -64,32 +63,10 @@ public class BkInfo {
 
 
     public static void main(String[] args) throws Exception {
-        String fs = "m:90";
-        String mixedInfo = analyse(fs);
-        bks = latestbks.subList(0, 4);
-        System.out.println(mixedInfo);
-
-        //定时器10秒执行一次任务
-        ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1, new BasicThreadFactory.Builder().namingPattern("example-schedule-pool-%d").daemon(true).build());
-        executorService.scheduleAtFixedRate(() -> {
-            //非有效时间不执行
-            if (!effectiveTime()) {
-                return;
-            }
-            //板块概念混合
-            try {
-                latestbks = new ArrayList<>();
-                String info = analyse(fs);
-                System.out.println("test");
-                latestbks = latestbks.subList(0, 4);
-                if (!bks.equals(latestbks)) {
-                    bks = latestbks;
-                    displayTray(info);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }, 0, 10000, TimeUnit.SECONDS);
+//        String fs = "m:90";
+//        String mixedInfo = analyse(fs);
+//        bks = latestbks.subList(0, 4);
+//        System.out.println(mixedInfo);
 
 //        //板块概念混合
 //        String fs = "m:90";
@@ -103,6 +80,26 @@ public class BkInfo {
 //        System.out.println();
 //        System.out.println(bkInfo);
 
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleAtFixedRate(() -> {
+            //非有效时间不执行
+            if (!effectiveTime()) {
+                return;
+            }
+            //板块概念混合
+            try {
+                latestbks = new ArrayList<>();
+                String fs = "m:90 t:2";
+                String info = analyse(fs);
+                latestbks = latestbks.subList(0, 4);
+                if (!bks.equals(latestbks)) {
+                    bks = latestbks;
+                    displayTray(info);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, 0, 60, TimeUnit.SECONDS);
     }
 
     /**
