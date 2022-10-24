@@ -20,20 +20,33 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 东方财富板块概念涨跌幅爬虫
+ * Windows系统消息通知推送
+ * http://quote.eastmoney.com/center/hsbk.html
+ */
 @Slf4j
 public class BkInfo {
-    //上午开盘时间
+    /**
+     * 上午开盘时间
+     */
     private static final Calendar morningStart = Calendar.getInstance();
-    //上午闭市时间
+    /**
+     * 上午闭市时间
+     */
     private static final Calendar morningEnd = Calendar.getInstance();
-    //下午开盘时间
+    /**
+     * 下午开盘时间
+     */
     private static final Calendar afternoonStart = Calendar.getInstance();
-    //下午闭市时间
+    /**
+     * 下午闭市时间
+     */
     private static final Calendar afternoonEnd = Calendar.getInstance();
 
     static {
         Date nowDate = new Date();
-
+        //9:30-11:30
         morningStart.setTime(nowDate);
         morningStart.set(Calendar.HOUR_OF_DAY, 9);
         morningStart.set(Calendar.MINUTE, 30);
@@ -43,7 +56,7 @@ public class BkInfo {
         morningEnd.set(Calendar.HOUR_OF_DAY, 11);
         morningEnd.set(Calendar.MINUTE, 30);
         morningEnd.set(Calendar.SECOND, 0);
-
+        //13:00-14:57
         afternoonStart.setTime(nowDate);
         afternoonStart.set(Calendar.HOUR_OF_DAY, 13);
         afternoonStart.set(Calendar.MINUTE, 0);
@@ -56,10 +69,10 @@ public class BkInfo {
     }
 
     /**
-     * 板块信息
+     * 最高涨幅板块/概念
      */
-    private static List<String> bks = new ArrayList<>();
-    private static List<String> latestbks = new ArrayList<>();
+    private static String topBK = "";
+    private static String latestTopBK = "";
 
 
     public static void main(String[] args) throws Exception {
@@ -80,39 +93,45 @@ public class BkInfo {
 //        System.out.println();
 //        System.out.println(bkInfo);
 
+        //定时任务线程池60秒触发一次更新数据
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(() -> {
-            //非有效时间不执行
-            if (!effectiveTime()) {
+            Calendar now = Calendar.getInstance();
+            now.setTime(new Date());
+            //交易时间结束关闭线程池
+            if (now.after(afternoonEnd)) {
+                service.shutdown();
+            }
+            //非交易时间不执行
+            if (!effectiveTime(now)) {
                 return;
             }
             //板块概念混合
             try {
-                latestbks = new ArrayList<>();
-                String fs = "m:90 t:2";
+                String fs = "m:90";
                 String info = analyse(fs);
-                latestbks = latestbks.subList(0, 4);
-                if (!bks.equals(latestbks)) {
-                    bks = latestbks;
+                System.out.println(info);
+                if (!topBK.equals(latestTopBK)) {
+                    topBK = latestTopBK;
                     displayTray(info);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, 60, TimeUnit.SECONDS);
+        }, 0, 20, TimeUnit.SECONDS);
+
     }
 
     /**
      * 判断当前时间是否有效
      */
-    private static boolean effectiveTime() {
-        Calendar now = Calendar.getInstance();
-        now.setTime(new Date());
-        //上午
+    private static boolean effectiveTime(Calendar now) {
+        //上午交易时间
         boolean morningEffective = isEffectiveDate(now, morningStart, morningEnd);
         if (morningEffective) {
             return true;
         }
+        //下午交易时间
         boolean afternoonEffective = isEffectiveDate(now, afternoonStart, afternoonEnd);
         if (afternoonEffective) {
             return true;
@@ -134,6 +153,11 @@ public class BkInfo {
         return now.after(start) && now.before(end);
     }
 
+    /**
+     * Windows系统消息通知推送
+     *
+     * @param text 通知推送内容
+     */
     public static void displayTray(String text) throws Exception {
         SystemTray systemTray = SystemTray.getSystemTray();
 
@@ -148,16 +172,19 @@ public class BkInfo {
         //Set tooltip text for the tray icon
         trayIcon.setToolTip("System tray icon demo");
         systemTray.add(trayIcon);
-
-        trayIcon.displayMessage("板块", text, TrayIcon.MessageType.INFO);
+        //caption为空标题扩大正文行数
+        trayIcon.displayMessage("", text, TrayIcon.MessageType.INFO);
     }
 
+    /**
+     * 解析数据
+     */
     private static String analyse(String fs) throws Exception {
         String url = "http://88.push2.eastmoney.com/api/qt/clist/get?";
         String originData = sendRequest(url, fs);
         originData = originData.substring(originData.indexOf("[{"), originData.lastIndexOf("}}"));
         List<Map<String, Object>> data = (List<Map<String, Object>>) JSON.parse(originData);
-
+        latestTopBK = (String) data.get(0).get("f14");
         StringBuilder stringBuilder = new StringBuilder();
         for (Map<String, Object> bk : data) {
             //板块名称
@@ -165,7 +192,6 @@ public class BkInfo {
             if (bkName.contains("昨日")) {
                 continue;
             }
-            latestbks.add(bkName);
             //板块涨跌幅
             BigDecimal rise = ((BigDecimal) bk.get("f3"));
             //领涨股
@@ -177,10 +203,12 @@ public class BkInfo {
         return stringBuilder.toString();
     }
 
+    /**
+     * 发送请求
+     */
     private static String sendRequest(String url, String fs) throws Exception {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            CloseableHttpResponse response = null;
-            //设置请求头，将爬虫伪装成浏览器
+            CloseableHttpResponse response;
             //封装请求参数
             List<BasicNameValuePair> list = new ArrayList<>();
             list.add(new BasicNameValuePair("pn", "1"));
@@ -200,6 +228,7 @@ public class BkInfo {
             String params = EntityUtils.toString(new UrlEncodedFormEntity(list, Consts.UTF_8));
             //4、创建HttpGet请求
             HttpGet httpGet = new HttpGet(url + params);
+            //设置请求头，将爬虫伪装成浏览器
             httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36");
             //3.执行get请求，相当于在输入地址栏后敲回车键
             response = httpClient.execute(httpGet);
