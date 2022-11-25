@@ -20,7 +20,7 @@ public class StockSectionStatistics {
     private static LinkedHashMap<String, BigDecimal> m10 = new LinkedHashMap<>();
 
     public static void main(String[] args) {
-        analyse();
+        analyse("3");
         m0 = sortMapByValue(m0);
         m5 = sortMapByValue(m5);
         m10 = sortMapByValue(m10);
@@ -32,10 +32,11 @@ public class StockSectionStatistics {
         System.out.println("0日即时： " + m0);
         System.out.println("5日连续： " + intersection(m0, m5));
         System.out.println("10日连续：" + intersection(m0, m10));
+        System.out.println();
     }
 
-    private static void analyse() {
-        List<Map<String, Object>> data = getData();
+    private static void analyse(String type) {
+        List<Map<String, Object>> data = getData(type);
         for (Map<String, Object> bk : data) {
             String bkName = (String) bk.get("f14");
 
@@ -48,8 +49,11 @@ public class StockSectionStatistics {
         }
     }
 
-    private static List<Map<String, Object>> getData() {
-        String url = "https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=500&po=1&np=1&fields=f12%2Cf13%2Cf14%2Cf62%2Cf164%2Cf174&fid=f62&fs=m%3A90%2Bt%3A2&ut=b2884a393a59ad64002292a3e90d46a5";
+    /**
+     * @param type 2板块 3概念
+     */
+    private static List<Map<String, Object>> getData(String type) {
+        String url = "https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=500&po=1&np=1&fields=f12%2Cf13%2Cf14%2Cf62%2Cf164%2Cf174&fid=f62&fs=m%3A90%2Bt%3A" + type + "&ut=b2884a393a59ad64002292a3e90d46a5";
         String originData = HttpClientUtil.sendRequest(url, null);
         originData = originData.substring(originData.indexOf("[{"), originData.lastIndexOf("}}"));
         List<Map<String, Object>> data = (List<Map<String, Object>>) JSON.parse(originData);

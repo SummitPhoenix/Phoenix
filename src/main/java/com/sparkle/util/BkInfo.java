@@ -78,8 +78,6 @@ public class BkInfo {
     public static void main(String[] args) throws Exception {
 //        String fs = "m:90";
 //        String mixedInfo = analyse(fs);
-//        bks = latestbks.subList(0, 4);
-//        System.out.println(mixedInfo);
 
 //        //板块概念混合
 //        String fs = "m:90";
@@ -113,7 +111,7 @@ public class BkInfo {
                 System.out.println(info);
                 if (!topBK.equals(latestTopBK)) {
                     topBK = latestTopBK;
-                    displayTray(info);
+                    windowsMessagePush(info);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -158,7 +156,7 @@ public class BkInfo {
      *
      * @param text 通知推送内容
      */
-    public static void displayTray(String text) throws Exception {
+    public static void windowsMessagePush(String text) throws Exception {
         SystemTray systemTray = SystemTray.getSystemTray();
 
         //If the icon is a file
@@ -184,7 +182,7 @@ public class BkInfo {
         String originData = sendRequest(url, fs);
         originData = originData.substring(originData.indexOf("[{"), originData.lastIndexOf("}}"));
         List<Map<String, Object>> data = (List<Map<String, Object>>) JSON.parse(originData);
-        latestTopBK = (String) data.get(0).get("f14");
+        latestTopBK = (String) data.get(0).get("f14") + data.get(0).get("f3").toString().charAt(0);
         StringBuilder stringBuilder = new StringBuilder();
         for (Map<String, Object> bk : data) {
             //板块名称

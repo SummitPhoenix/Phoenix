@@ -26,7 +26,7 @@ public class StockDailyLimitStatistics {
         String url = "http://push2ex.eastmoney.com/getTopicQSPool?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=500&sort=tshare%3Adesc&date=" + new SimpleDateFormat("yyyyMMdd").format(new Date());
 
         BigDecimal minTotalMarket = billion100;
-        BigDecimal minRate = BigDecimal.valueOf(3.0);
+        BigDecimal minRate = BigDecimal.valueOf(5.0);
         BigDecimal minTurnOver = BigDecimal.valueOf(0.1);
         BigDecimal maxTurnOver = BigDecimal.valueOf(20.0);
         analyse(url, minTotalMarket, minRate, minTurnOver, maxTurnOver, 0);
@@ -59,6 +59,9 @@ public class StockDailyLimitStatistics {
 
         for (Map<String, Object> stock : data) {
             String stockCode = (String) stock.get("c");
+            if (stockCode.startsWith("300") || stockCode.startsWith("301") || stockCode.startsWith("688")) {
+                continue;
+            }
             String stockName = (String) stock.get("n");
             //涨跌幅
             BigDecimal rise = ((BigDecimal) stock.get("zdp")).setScale(2, RoundingMode.HALF_UP);
