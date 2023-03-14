@@ -54,7 +54,8 @@ public class StockDailyLimitStatistics {
                         ((BigDecimal) stock.get("zdp")).compareTo(BigDecimal.valueOf(11.0)) < 0 &&
                         ((BigDecimal) stock.get("hs")).compareTo(minTurnOver) > 0 &&
                         ((BigDecimal) stock.get("hs")).compareTo(maxTurnOver) < 0 &&
-                        ((Map<String, Integer>) stock.get("zttj")).get("ct") >= dailyLimitNumber
+                        ((Map<String, Integer>) stock.get("zttj")).get("ct") >= dailyLimitNumber &&
+                        new BigDecimal(stock.get("amount") + "").compareTo(BigDecimal.valueOf(1000000000)) > 0
         ).collect(Collectors.toList());
 
         for (Map<String, Object> stock : data) {

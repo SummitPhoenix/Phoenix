@@ -91,6 +91,11 @@ public class BkInfo {
 //        System.out.println();
 //        System.out.println(bkInfo);
 
+
+//        String fs = "m:90";
+//        String info = analyse(fs);
+//        System.out.println(info);
+
         //定时任务线程池60秒触发一次更新数据
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(() -> {
@@ -116,7 +121,7 @@ public class BkInfo {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, 20, TimeUnit.SECONDS);
+        }, 0, 60, TimeUnit.SECONDS);
 
     }
 

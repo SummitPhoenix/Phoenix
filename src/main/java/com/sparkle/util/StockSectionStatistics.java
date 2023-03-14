@@ -20,7 +20,7 @@ public class StockSectionStatistics {
     private static LinkedHashMap<String, BigDecimal> m10 = new LinkedHashMap<>();
 
     public static void main(String[] args) {
-        analyse("3");
+        analyse("2");
         m0 = sortMapByValue(m0);
         m5 = sortMapByValue(m5);
         m10 = sortMapByValue(m10);
