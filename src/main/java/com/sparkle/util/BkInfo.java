@@ -111,7 +111,7 @@ public class BkInfo {
             }
             //板块概念混合
             try {
-                String fs = "m:90";
+                String fs = "m:90 t:2";
                 String info = analyse(fs);
                 System.out.println(info);
                 if (!topBK.equals(latestTopBK)) {

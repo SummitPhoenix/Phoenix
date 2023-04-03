@@ -1,35 +1,58 @@
 package com.sparkle.util;
 
+import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.io.FileUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SqlUtil {
-
     public static void main(String[] args) throws Exception {
-        generateBatchInsertSql();
+//        String s = "AlterInfo,EntInfo,Branch,GSInfo,Shareholder,KeyPerson,BaikeInfo,Investment,B2B,EnterpriseProductInfo,OriginateTeam,Financing,AnnualReport,Tender,RegisterPerson,SimilarCom,RecruitmentOverview,TradeShow,LawOfficeInfo,RecruitmentDetail,PromotionOverview,AdministrativeLicense,ImportAndExportCredit,TaxCredit,PromotionDetail,TaxQualify,ShopGoodsInfo,BrandInfoOverView,ShopInfo,EcomOverview,BrandInfo,Wechat,APPViewAndDetail,Microblog,Patents,PatentsOverview,softWareCopyright,opusCopyright,WebsiteInformation,TradeMark,Certificate,TaxArrearsNoticeDetail,SpotCheckInfo,EquityPledged,TaxIllegal,IllegalInfoCB,HeightLimitInfoCB,ChattelMortgageInfoCB,Abnormality,CourtAnnouncement,Dishonest,EndBookInfo,AnnTrialInfo,Executor,AdministrativePenaltyTax,AdministrativePenalty,TaxArrearsNoticeOverview,JudicialAssist,TaxAbnormal,JudgementsInfo,IntellectualPropertyPledge,LinkedinUserInfo,PersonalMicroblog,Maimai";
+//        s = s.toLowerCase();
+//        String[] labels = s.split(",");
+//        String tables = "abnormality,administrativepenalty,administrativepenaltytax,alterinfo,annualreport,baikeinfo,branch,brandinfo,brandinfooverview,courtannouncement,dishonest,ecomoverview,endbookinfo,enterpriseproductinfo,equitypledged,executor,financing,gsinfo,heightlimitinfocb,importandexportcredit,investment,judgementsinfo,judicialassist,keyperson,microblog,opuscopyright,originateteam,patents,patentsoverview,promotiondetail,promotionoverview,recruitmentdetail,shareholder,shopinfo,similarcom,softwarecopyright,taxcredit,taxqualify,tender,trademark,tradeshow,websiteinformation,wechat";
+//        String[] tableNames = tables.split(",");
+//        Set<String> a = new LinkedHashSet<>(Arrays.asList(labels));
+//        Set<String> b = new LinkedHashSet<>(Arrays.asList(tableNames));
+//        Set<String> set = new LinkedHashSet<>(a);
+//        set.removeAll(b);
+//        System.out.println(set);
+//        set.clear();
+//        set.addAll(b);
+//        set.removeAll(a);
+//        System.out.println(set);
+
+        test();
     }
 
     private static void generateBatchInsertSql() {
-        String s = "CREATE TABLE `invoice_temporary_indicator` (\n" +
-                "  `social_credit_code` varchar(18) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '统一社会信用代码',\n" +
-                "  `invoice_suspend_12` int DEFAULT NULL COMMENT '近12个月断票次数',\n" +
-                "  `invoice_stop_12` int DEFAULT NULL COMMENT '近12个月最大连续未开票天数',\n" +
-                "  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建日期',\n" +
-                "  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日期',\n" +
-                "  PRIMARY KEY (`social_credit_code`)\n" +
-                ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='发票数据中间表';";
+        String s = "CREATE TABLE `taxinfo_qybgdjxx_list` (\n" +
+                "  `nsrsbh` varchar(50) NOT NULL COMMENT '纳税人识别号',\n" +
+                "  `bgxmmc` varchar(200) DEFAULT NULL COMMENT '变更项目名称',\n" +
+                "  `bgxmdm` varchar(50) DEFAULT NULL COMMENT '变更项目代码',\n" +
+                "  `bgqnr` varchar(3000) DEFAULT NULL COMMENT '变更前内容',\n" +
+                "  `bghnr` varchar(3000) DEFAULT NULL COMMENT '变更后内容',\n" +
+                "  `bgrq` varchar(20) DEFAULT NULL COMMENT '变更日期',\n" +
+                "  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n" +
+                ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='企业变更表';";
         String tableName = s.substring(s.indexOf("`") + 1, s.indexOf("` ("));
         tableName = tableName.toLowerCase();
-        s = s.substring(s.indexOf("(") + 1, s.indexOf("  PRIMARY"));
+        if (s.contains("PRIMARY")) {
+            s = s.substring(s.indexOf("(") + 1, s.indexOf("  PRIMARY"));
+        } else {
+            s = s.substring(s.indexOf("(") + 1, s.indexOf(") ENGINE"));
+        }
         String[] rows = s.split("\n");
         List<String> values = new ArrayList<>();
         List<String> lowerValues = new ArrayList<>();
         for (String row : rows) {
-            if ("".equals(row)) {
+            if ("".equals(row) || row.contains("update_time")) {
                 continue;
             }
             int start = row.indexOf("`") + 1;
@@ -210,5 +233,238 @@ public class SqlUtil {
         }
         matcher.appendTail(sb);
         return sb.toString();
+    }
+
+    private static void generateTaxCreateTableSql() throws Exception {
+        String table = "1 纳税人识别号 NSRSBH VARCHAR2(50)\n" +
+                "2 变更项目名称 BGXMMC VARCHAR2(200)\n" +
+                "3 变更项目代码 BGXMDM VARCHAR2(50)\n" +
+                "4 变更前内容 BGQNR VARCHAR2(3000)\n" +
+                "5 变更后内容 BGHNR VARCHAR2(3000)\n" +
+                "6 变更日期 BGRQ VARCHAR2(20)";
+        String tableName = "QYBGDJXX_LIST";
+        tableName = "taxinfo_" + tableName.toLowerCase();
+        String tableNameComment = "企业变更表";
+
+        String sql = "CREATE TABLE `report_business`.`" + tableName + "`  (\n";
+        String[] columns = table.split("\n");
+        String primaryKey = "nsrsbh";
+        for (int i = 0; i < columns.length; i++) {
+            String[] values = columns[i].split(" ");
+            values[2] = values[2].toLowerCase();
+            //字段类型
+            String dataType = "";
+            if (columns[i].contains("VARCHAR")) {
+                String varcharLength = values[3].substring(values[3].indexOf("("), values[3].indexOf(")") + 1);
+                dataType = "varchar" + varcharLength;
+            } else if (columns[i].contains("TIMESTAMP")) {
+                dataType = "timestamp";
+            } else if (columns[i].contains("DATE")) {
+                dataType = "datetime";
+            } else if (columns[i].contains("CLOB")) {
+                dataType = "text";
+            } else {
+                throw new Exception();
+            }
+            //是否需要非空
+            String nullControl = "NULL";
+            if (i == 0) {
+                nullControl = "NOT " + nullControl;
+            }
+            sql += "`" + values[2] + "` " + dataType + " " + nullControl + " COMMENT '" + values[1] + "',\n";
+        }
+        if (StringUtils.hasText(primaryKey)) {
+            sql += "PRIMARY KEY (`" + primaryKey + "`)\n" +
+                    ") COMMENT = '" + tableNameComment + "';";
+        }
+        System.out.println(sql);
+    }
+
+    private static void generateMotivationalSalesCloudCreateTableSql(String tableName, String tableNameComment, String primaryKey, String table) throws Exception {
+        tableName = "lxy_" + tableName;
+        tableName = tableName.toLowerCase();
+        String sql = "CREATE TABLE `report_business`.`" + tableName + "`  (\n";
+        String[] columns = table.split("\n");
+
+        /**
+         * key type default description
+         */
+        for (int i = 0; i < columns.length; i++) {
+            String[] values = columns[i].split("\t");
+            //字段类型
+            String dataType;
+            switch (values[1]) {
+                case "string":
+                    dataType = "varchar(255)";
+                    break;
+                case "timestamp":
+                    dataType = "datetime";
+                    break;
+                case "int":
+                    dataType = "int";
+                    break;
+                default:
+                    throw new Exception("字段类型错误");
+            }
+            //是否需要非空
+            String nullControl = "NULL";
+            if ("pid".equals(values[0]) || "PID".equals(values[0])) {
+                nullControl = "NOT " + nullControl;
+            }
+            String defaultStr = "";
+            if (!" ".equals(values[2])) {
+                defaultStr = " DEFAULT " + values[2];
+            }
+            String comment = "";
+            if (!" ".equals(values[3])) {
+                comment = " COMMENT '" + values[3] + "'";
+            }
+            sql += "`" + values[0] + "` " + dataType + " " + nullControl + defaultStr + comment + ",\n";
+        }
+        if (StringUtils.hasText(primaryKey)) {
+            sql += "PRIMARY KEY (`" + primaryKey + "`)\n";
+        }
+        sql += ") COMMENT = '" + tableNameComment + "';";
+        System.out.println(sql);
+        FileUtils.writeStringToFile(new File("C:\\Users\\0028\\Desktop\\SQL\\" + tableNameComment + ".txt"), sql, StandardCharsets.UTF_8.toString());
+    }
+
+    private static void databaseTransfer() throws Exception {
+        String str = FileUtils.readFileToString(new File("C:\\Users\\0028\\Desktop\\MongoDB.json"), StandardCharsets.UTF_8.toString());
+        String[] jsonArr = str.split("\n");
+        for (String json : jsonArr) {
+            JSONObject jsonObject = JSONObject.parseObject(json);
+            String tableName = (String) jsonObject.get("name");
+            String tableNameComment = (String) jsonObject.get("title");
+            String primaryKey = null;
+            String schemaStr = (String) jsonObject.get("schema_strings");
+
+            JSONObject schema = JSONObject.parseObject(schemaStr);
+            Map<String, Object> schemaMap = schema.getJSONObject("properties").toJavaObject(Map.class);
+
+            StringBuilder sb = new StringBuilder();
+            //第一行添加税号
+            sb.append("socialCreditCode" + "\t" + "string" + "\t" + " " + "\t" + "统一社会信用代码" + "\n");
+            Iterator<Entry<String, Object>> entries = schemaMap.entrySet().iterator();
+            while (entries.hasNext()) {
+                Entry<String, Object> entry = entries.next();
+                String key = entry.getKey();
+                if (!"_id".equals(key) && !key.startsWith("text_")) {
+                    Map<String, Object> values = (Map<String, Object>) entry.getValue();
+                    String bsonType = (String) values.get("bsonType");
+                    if (!"string".equals(bsonType) && !"timestamp".equals(bsonType) && !"int".equals(bsonType)) {
+                        throw new Exception("字段类型错误:" + bsonType);
+                    }
+                    String defaultValue = StringUtils.hasText(String.valueOf(values.get("defaultValue"))) ? String.valueOf(values.get("defaultValue")) : " ";
+                    String description = StringUtils.hasText((String) values.get("description")) ? (String) values.get("description") : " ";
+                    sb.append(key + "\t" + bsonType + "\t" + defaultValue + "\t" + description + "\n");
+                }
+            }
+            //最后一行添加创建时间
+            sb.append("createTime" + "\t" + "timestamp" + "\t" + "CURRENT_TIMESTAMP" + "\t" + "创建时间" + "\n");
+            if (schemaMap.containsKey("pid")) {
+                primaryKey = "pid";
+            }
+            if (schemaMap.containsKey("PID")) {
+                primaryKey = "PID";
+            }
+            generateMotivationalSalesCloudCreateTableSql(tableName, tableNameComment, primaryKey, sb.toString());
+            System.out.println();
+        }
+//        FileUtils.writeStringToFile(new File("C:\\Users\\0028\\Desktop\\MongoDB1.json"), str, StandardCharsets.UTF_8.toString());
+    }
+
+    /**
+     * 驼峰转下划线
+     *
+     * @param str 驼峰命名字符串
+     * @return 下划线命名字符串
+     */
+    private static String camelToUnderline(String str) {
+        if (str == null || str.isEmpty()) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (Character.isUpperCase(c)) {
+                sb.append("_").append(Character.toLowerCase(c));
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    private static void test() throws Exception {
+        String str = FileUtils.readFileToString(new File("C:\\Users\\0028\\Desktop\\lxy_all.sql"), StandardCharsets.UTF_8.toString());
+        while (str.contains("CREATE TABLE")) {
+            String createTableSql = str.substring(str.indexOf("CREATE TABLE"), str.indexOf("ROW_FORMAT = Dynamic;"));
+            str = str.substring(str.indexOf("DROP TABLE") + 10);
+            generateMotivationalSalesCloudInsertSql(createTableSql);
+            System.out.println("</insert>");
+        }
+    }
+
+    private static void generateMotivationalSalesCloudInsertSql(String table) {
+        String tableName = table.substring(table.indexOf("`") + 1, table.indexOf("`  ("));
+//        tableName = tableName.toLowerCase();
+        if (table.contains("PRIMARY")) {
+            table = table.substring(table.indexOf("(") + 3, table.indexOf("  PRIMARY"));
+        } else {
+            table = table.substring(table.indexOf("(") + 3, table.indexOf(") ENGINE"));
+        }
+        String[] rows = table.split("\n");
+        List<String> values = new ArrayList<>();
+//        List<String> lowerValues = new ArrayList<>();
+        for (String row : rows) {
+            if ("".equals(row) || row.contains("createTime")) {
+                continue;
+            }
+            row = row.replace("default 0", "");
+            int start = row.indexOf("`") + 1;
+            int end = row.indexOf("`", 4);
+            row = row.substring(start, end);
+            values.add(row);
+//            lowerValues.add(row.toLowerCase());
+        }
+        StringBuilder fieldNamesBuilder = new StringBuilder();
+        for (String field : values) {
+            fieldNamesBuilder.append("`");
+            fieldNamesBuilder.append(field);
+            fieldNamesBuilder.append("`,\n");
+        }
+        String fieldNames = fieldNamesBuilder.toString();
+        fieldNames = fieldNames.substring(0, fieldNames.length() - 2);
+
+        StringBuilder fieldValuesBuilder = new StringBuilder();
+        for (String field : values) {
+            fieldValuesBuilder.append("#{item.");
+            fieldValuesBuilder.append(field);
+            fieldValuesBuilder.append("},\n");
+        }
+        String fieldValues = fieldValuesBuilder.toString();
+        fieldValues = fieldValues.substring(0, fieldValues.length() - 2);
+
+//        StringBuilder updateFieldsBuilder = new StringBuilder();
+//        for (int i = 1; i < values.size(); i++) {
+//            updateFieldsBuilder.append("`");
+//            updateFieldsBuilder.append(values.get(i));
+//            updateFieldsBuilder.append("`=VALUES(");
+//            updateFieldsBuilder.append(values.get(i));
+//            updateFieldsBuilder.append("),\n");
+//        }
+//        String updateFields = updateFieldsBuilder.toString();
+//        updateFields = updateFields.substring(0, updateFields.length() - 2);
+        String updateFields = "";
+
+        String sql = "INSERT INTO report_business." + tableName + "(\n" +
+                fieldNames + ")\n" +
+                "VALUES\n" +
+                "<foreach collection=\"list\" item=\"item\" separator=\",\"> \n(" +
+                fieldValues + ")\n </foreach> \n" +
+                "ON DUPLICATE KEY UPDATE\n" + updateFields;
+        System.out.println("<insert id=\"insert" + tableName + "\" parameterType=\"java.util.List\">");
+        System.out.println(sql);
     }
 }
