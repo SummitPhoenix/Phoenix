@@ -6,41 +6,28 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SqlUtil {
     public static void main(String[] args) throws Exception {
-//        String s = "AlterInfo,EntInfo,Branch,GSInfo,Shareholder,KeyPerson,BaikeInfo,Investment,B2B,EnterpriseProductInfo,OriginateTeam,Financing,AnnualReport,Tender,RegisterPerson,SimilarCom,RecruitmentOverview,TradeShow,LawOfficeInfo,RecruitmentDetail,PromotionOverview,AdministrativeLicense,ImportAndExportCredit,TaxCredit,PromotionDetail,TaxQualify,ShopGoodsInfo,BrandInfoOverView,ShopInfo,EcomOverview,BrandInfo,Wechat,APPViewAndDetail,Microblog,Patents,PatentsOverview,softWareCopyright,opusCopyright,WebsiteInformation,TradeMark,Certificate,TaxArrearsNoticeDetail,SpotCheckInfo,EquityPledged,TaxIllegal,IllegalInfoCB,HeightLimitInfoCB,ChattelMortgageInfoCB,Abnormality,CourtAnnouncement,Dishonest,EndBookInfo,AnnTrialInfo,Executor,AdministrativePenaltyTax,AdministrativePenalty,TaxArrearsNoticeOverview,JudicialAssist,TaxAbnormal,JudgementsInfo,IntellectualPropertyPledge,LinkedinUserInfo,PersonalMicroblog,Maimai";
-//        s = s.toLowerCase();
-//        String[] labels = s.split(",");
-//        String tables = "abnormality,administrativepenalty,administrativepenaltytax,alterinfo,annualreport,baikeinfo,branch,brandinfo,brandinfooverview,courtannouncement,dishonest,ecomoverview,endbookinfo,enterpriseproductinfo,equitypledged,executor,financing,gsinfo,heightlimitinfocb,importandexportcredit,investment,judgementsinfo,judicialassist,keyperson,microblog,opuscopyright,originateteam,patents,patentsoverview,promotiondetail,promotionoverview,recruitmentdetail,shareholder,shopinfo,similarcom,softwarecopyright,taxcredit,taxqualify,tender,trademark,tradeshow,websiteinformation,wechat";
-//        String[] tableNames = tables.split(",");
-//        Set<String> a = new LinkedHashSet<>(Arrays.asList(labels));
-//        Set<String> b = new LinkedHashSet<>(Arrays.asList(tableNames));
-//        Set<String> set = new LinkedHashSet<>(a);
-//        set.removeAll(b);
-//        System.out.println(set);
-//        set.clear();
-//        set.addAll(b);
-//        set.removeAll(a);
-//        System.out.println(set);
-
-        test();
+        generateBatchInsertSql();
     }
 
     private static void generateBatchInsertSql() {
-        String s = "CREATE TABLE `taxinfo_qybgdjxx_list` (\n" +
-                "  `nsrsbh` varchar(50) NOT NULL COMMENT '纳税人识别号',\n" +
-                "  `bgxmmc` varchar(200) DEFAULT NULL COMMENT '变更项目名称',\n" +
-                "  `bgxmdm` varchar(50) DEFAULT NULL COMMENT '变更项目代码',\n" +
-                "  `bgqnr` varchar(3000) DEFAULT NULL COMMENT '变更前内容',\n" +
-                "  `bghnr` varchar(3000) DEFAULT NULL COMMENT '变更后内容',\n" +
-                "  `bgrq` varchar(20) DEFAULT NULL COMMENT '变更日期',\n" +
-                "  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n" +
-                ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='企业变更表';";
+        String s = "CREATE TABLE `sz_tax_illegal` (\n" +
+                "  `social_credit_code` varchar(18) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '统一社会信用代码',\n" +
+                "  `parent_ids` text COLLATE utf8mb4_general_ci COMMENT '组织机构上层ids',\n" +
+                "  `illegal_case_kind` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '违法类型',\n" +
+                "  `main_Illegal_case` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '主要违法事实',\n" +
+                "  `punishment` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '处罚情况',\n" +
+                "  `create_time` datetime DEFAULT NULL\n" +
+                ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='重大税收违法失信';";
         String tableName = s.substring(s.indexOf("`") + 1, s.indexOf("` ("));
         tableName = tableName.toLowerCase();
         if (s.contains("PRIMARY")) {
@@ -52,7 +39,7 @@ public class SqlUtil {
         List<String> values = new ArrayList<>();
         List<String> lowerValues = new ArrayList<>();
         for (String row : rows) {
-            if ("".equals(row) || row.contains("update_time")) {
+            if ("".equals(row) || row.contains("update_time") || row.contains("create_time")) {
                 continue;
             }
             int start = row.indexOf("`") + 1;
@@ -73,7 +60,7 @@ public class SqlUtil {
         StringBuilder fieldValuesBuilder = new StringBuilder();
         for (String field : values) {
             fieldValuesBuilder.append("#{item.");
-            fieldValuesBuilder.append(field.toUpperCase());
+            fieldValuesBuilder.append(field);
             fieldValuesBuilder.append("},\n");
         }
         String fieldValues = fieldValuesBuilder.toString();
@@ -96,7 +83,9 @@ public class SqlUtil {
                 "<foreach collection=\"list\" item=\"item\" separator=\",\"> \n(" +
                 fieldValues + ")\n </foreach> \n" +
                 "ON DUPLICATE KEY UPDATE\n" + updateFields;
+        System.out.println("<insert id=\"insert" + tableName + "\" parameterType=\"java.util.List\">");
         System.out.println(sql);
+        System.out.println("</insert>");
     }
 
     private static void generateCreateTableSql() throws Exception {
@@ -397,17 +386,33 @@ public class SqlUtil {
     }
 
     private static void test() throws Exception {
-        String str = FileUtils.readFileToString(new File("C:\\Users\\0028\\Desktop\\lxy_all.sql"), StandardCharsets.UTF_8.toString());
-        while (str.contains("CREATE TABLE")) {
-            String createTableSql = str.substring(str.indexOf("CREATE TABLE"), str.indexOf("ROW_FORMAT = Dynamic;"));
-            str = str.substring(str.indexOf("DROP TABLE") + 10);
-            generateMotivationalSalesCloudInsertSql(createTableSql);
-            System.out.println("</insert>");
-        }
+//        String str = FileUtils.readFileToString(new File("C:\\Users\\0028\\Desktop\\lxy_all.sql"), StandardCharsets.UTF_8.toString());
+//        while (str.contains("CREATE TABLE")) {
+//            String createTableSql = str.substring(str.indexOf("CREATE TABLE"), str.indexOf("ROW_FORMAT = Dynamic;"));
+//            str = str.substring(str.indexOf("DROP TABLE") + 10);
+//            generateMotivationalSalesCloudInsertSql(createTableSql);
+//            System.out.println("</insert>");
+//        }
+
+        String createTableSql = "CREATE TABLE `lxy_b2binfo` (\n" +
+                "  `socialCreditCode` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '统一社会信用代码',\n" +
+                "  `OEMService` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '代工模式',\n" +
+                "  `annualExpVolume` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '年出口额',\n" +
+                "  `annualTurnover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '年营业额',\n" +
+                "  `brand` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '经营品牌',\n" +
+                "  `businessClient` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '主要客户群',\n" +
+                "  `businessModel` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '经营模式',\n" +
+                "  `businessProduct` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '主要产品或服务',\n" +
+                "  `businessScope` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '经营范围',\n" +
+                "  `factoryArea` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '厂房面积',\n" +
+                "  `scale` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '员工人数'\n" +
+                ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC COMMENT='经营概览';";
+        generateMotivationalSalesCloudInsertSql(createTableSql);
+        System.out.println("</insert>");
     }
 
     private static void generateMotivationalSalesCloudInsertSql(String table) {
-        String tableName = table.substring(table.indexOf("`") + 1, table.indexOf("`  ("));
+        String tableName = table.substring(table.indexOf("`") + 1, table.indexOf("` ("));
 //        tableName = tableName.toLowerCase();
         if (table.contains("PRIMARY")) {
             table = table.substring(table.indexOf("(") + 3, table.indexOf("  PRIMARY"));
