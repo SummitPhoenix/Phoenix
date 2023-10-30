@@ -38,7 +38,7 @@ public class StockDailyLimitStatistics {
             now.setTime(new Date());
             //交易时间结束关闭线程池
             if (now.after(StockUtil.afternoonEnd)) {
-                service.shutdown();
+                System.exit(0);
             }
             //非交易时间不执行
             if (!StockUtil.effectiveTime(now)) {
@@ -46,7 +46,7 @@ public class StockDailyLimitStatistics {
             }
             //概念
             try {
-                String info = analyse(url, minTotalMarket, minRate, minTurnOver, maxTurnOver, 0);
+                String info = analyse(url, minTotalMarket, minRate, minTurnOver, maxTurnOver, 1);
                 if (StringUtils.hasText(info)) {
                     StockUtil.windowsMessagePush(info);
                 }
