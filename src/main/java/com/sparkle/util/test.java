@@ -1,34 +1,12 @@
 package com.sparkle.util;
 
+import cn.hutool.http.HttpRequest;
+
 public class test {
-
-    private static String sendRequestWithRetry() {
-        int maxRetries = 10;
-        int retries = 0;
-        String callbackResult = null;
-        while (retries < maxRetries) {
-            try {
-                System.out.println(retries);
-                callbackResult = "test";
-                int a = 0 / 0;
-            } catch (Exception e) {
-                retries++;
-                if (retries == maxRetries) {
-                    e.printStackTrace();
-                    break;
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-
+    public static void main(String[] args) throws Exception {
+        for (int i = 0; i < 50; i++) {
+            String token = HttpRequest.get("http://localhost:9010/api/getToken?user=enterprise&accessToken=03D76490284CCBAE89BDF665E5CB212A&level=high").execute().body();
+            System.out.println(token);
         }
-        return callbackResult;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(sendRequestWithRetry());
     }
 }
