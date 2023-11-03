@@ -42,7 +42,7 @@ public class StockUtil {
 
         afternoonEnd.setTime(nowDate);
         afternoonEnd.set(Calendar.HOUR_OF_DAY, 14);
-        afternoonEnd.set(Calendar.MINUTE, 57);
+        afternoonEnd.set(Calendar.MINUTE, 50);
         afternoonEnd.set(Calendar.SECOND, 0);
     }
 

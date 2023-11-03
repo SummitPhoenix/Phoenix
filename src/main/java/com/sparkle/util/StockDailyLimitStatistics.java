@@ -28,8 +28,8 @@ public class StockDailyLimitStatistics {
         String url = "http://push2ex.eastmoney.com/getTopicQSPool?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=500&sort=tshare%3Adesc&date=" + new SimpleDateFormat("yyyyMMdd").format(new Date());
         BigDecimal minTotalMarket = billion50;
         BigDecimal minRate = BigDecimal.valueOf(5.0);
-        BigDecimal minTurnOver = BigDecimal.valueOf(0.1);
-        BigDecimal maxTurnOver = BigDecimal.valueOf(90.0);
+        BigDecimal minTurnOver = BigDecimal.valueOf(1.0);
+        BigDecimal maxTurnOver = BigDecimal.valueOf(20.0);
 
         //定时任务线程池60秒触发一次更新数据
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
@@ -46,7 +46,7 @@ public class StockDailyLimitStatistics {
             }
             //概念
             try {
-                String info = analyse(url, minTotalMarket, minRate, minTurnOver, maxTurnOver, 1);
+                String info = analyse(url, minTotalMarket, minRate, minTurnOver, maxTurnOver, 0);
                 if (StringUtils.hasText(info)) {
                     StockUtil.windowsMessagePush(info);
                 }
